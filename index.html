@@ -3,6 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (() => {
+        const params = new URLSearchParams(window.location.search);
+        const requestedUiStyle = (params.get('uiStyle') || params.get('qdnUiStyle') || '').trim().toLowerCase();
+        const uiStyle = ['classic', 'modern', 'chibi'].includes(requestedUiStyle) ? requestedUiStyle : 'classic';
+
+        document.documentElement.dataset.ui = uiStyle;
+      })();
+    </script>
     <link rel="icon" href="./favicon.ico" sizes="16x16 32x32 48x48 64x64" />
     <title>ChibiHub</title>
   </head>

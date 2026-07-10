@@ -9,6 +9,7 @@ import {
   applyDisplaySettings,
   getDisplaySettingsUpdateFromMessage,
   getInitialDisplaySettings,
+  type QdnDisplaySettings,
 } from './displaySettings';
 import { ChatPage } from './ChatPage';
 import { Dashboard } from './Dashboard';
@@ -62,7 +63,11 @@ function AccountAvatar({ identity }: { identity: QortalIdentity | null }) {
   return <div className="account-avatar account-avatar-fallback">{getQortalIdentityInitials(identity)}</div>;
 }
 
-export function App() {
+type AppProps = {
+  initialDisplaySettings?: QdnDisplaySettings;
+};
+
+export function App({ initialDisplaySettings }: AppProps = {}) {
   const [bridgeState, setBridgeState] = useState<BridgeState | null>(null);
   const [account, setAccount] = useState<QdnSelectedAccount | null>(null);
   const [isAccountLoading, setIsAccountLoading] = useState(true);
@@ -70,7 +75,9 @@ export function App() {
   const [error, setError] = useState('');
   const [introComplete, setIntroComplete] = useState(() => hasPlayedIntroThisSession || prefersReducedMotion());
   const [soundReplayAvailable, setSoundReplayAvailable] = useState(false);
-  const [displaySettings, setDisplaySettings] = useState(getInitialDisplaySettings);
+  const [displaySettings, setDisplaySettings] = useState(
+    () => initialDisplaySettings ?? getInitialDisplaySettings(),
+  );
   const [hasEnteredDashboard, setHasEnteredDashboard] = useState(false);
   const [activeView, setActiveView] = useState<AppView>('dashboard');
   const [qortalIdentity, setQortalIdentity] = useState<QortalIdentity | null>(null);
@@ -260,6 +267,7 @@ export function App() {
       data-accent={displaySettings.accent}
       data-text-size={displaySettings.textSize}
       data-theme={displaySettings.theme}
+      data-ui={displaySettings.uiStyle}
     >
       {!introComplete ? (
         <div className="intro-overlay" aria-hidden="true">

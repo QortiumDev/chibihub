@@ -8,6 +8,7 @@ import {
   normalizeAccent,
   normalizeTextSize,
   normalizeTheme,
+  normalizeUiStyle,
   type QdnDisplaySettings,
 } from './displaySettings';
 
@@ -15,6 +16,7 @@ const current: QdnDisplaySettings = {
   accent: 'blue',
   textSize: 'medium',
   theme: 'dark',
+  uiStyle: 'classic',
 };
 
 describe('display settings', () => {
@@ -27,12 +29,15 @@ describe('display settings', () => {
     expect(normalizeAccent('Cyan')).toBe('cyan');
     expect(normalizeTextSize('extra-large')).toBe('extra-large');
     expect(normalizeTextSize('HUGE')).toBe('huge');
+    expect(normalizeUiStyle('MODERN')).toBe('modern');
+    expect(normalizeUiStyle('chibi')).toBe('chibi');
   });
 
   it('rejects unsupported values', () => {
     expect(normalizeTheme('system')).toBeNull();
     expect(normalizeAccent('mauve')).toBeNull();
     expect(normalizeTextSize('extra-huge')).toBeNull();
+    expect(normalizeUiStyle('retro')).toBeNull();
   });
 
   it('uses the Qortium Home and qortium-chat text scale values', () => {
@@ -70,6 +75,7 @@ describe('display settings', () => {
       accent: 'yellow',
       textSize: 'large',
       theme: 'light',
+      uiStyle: 'classic',
     });
   });
 
@@ -79,7 +85,7 @@ describe('display settings', () => {
       _qdnTextSize: 'small',
       _qdnTheme: 'light',
       location: {
-        search: '?theme=dark&accent=red&textSize=huge',
+        search: '?theme=dark&accent=red&textSize=huge&uiStyle=modern',
       },
     });
 
@@ -87,6 +93,7 @@ describe('display settings', () => {
       accent: 'red',
       textSize: 'huge',
       theme: 'dark',
+      uiStyle: 'modern',
     });
   });
 
@@ -95,26 +102,47 @@ describe('display settings', () => {
       accent: 'blue',
       textSize: 'medium',
       theme: 'light',
+      uiStyle: 'classic',
     });
     expect(getDisplaySettingsUpdateFromMessage({ action: 'TEXT_SIZE_CHANGED', requestedHandler: 'UI', textSize: 'extra-large' }, current)).toEqual({
       accent: 'blue',
       textSize: 'extra-large',
       theme: 'dark',
+      uiStyle: 'classic',
     });
     expect(getDisplaySettingsUpdateFromMessage({ action: 'ACCENT_CHANGED', qdnAccent: 'pink' }, current)).toEqual({
       accent: 'pink',
       textSize: 'medium',
       theme: 'dark',
+      uiStyle: 'classic',
     });
     expect(
       getDisplaySettingsUpdateFromMessage(
-        { action: 'DISPLAY_SETTINGS_CHANGED', qdnAccent: 'teal', qdnTextSize: 'small', qdnTheme: 'light' },
+        {
+          action: 'DISPLAY_SETTINGS_CHANGED',
+          qdnAccent: 'teal',
+          qdnTextSize: 'small',
+          qdnTheme: 'light',
+          qdnUiStyle: 'modern',
+        },
         current,
       ),
     ).toEqual({
       accent: 'teal',
       textSize: 'small',
       theme: 'light',
+      uiStyle: 'modern',
+    });
+    expect(
+      getDisplaySettingsUpdateFromMessage(
+        { action: 'UI_STYLE_CHANGED', requestedHandler: 'UI', uiStyle: 'chibi' },
+        current,
+      ),
+    ).toEqual({
+      accent: 'blue',
+      textSize: 'medium',
+      theme: 'dark',
+      uiStyle: 'chibi',
     });
   });
 
@@ -122,6 +150,7 @@ describe('display settings', () => {
     expect(getDisplaySettingsUpdateFromMessage({ action: 'ACCENT_CHANGED', accent: 'mauve' }, current)).toBeNull();
     expect(getDisplaySettingsUpdateFromMessage({ action: 'TEXT_SIZE_CHANGED', textSize: 'extra-huge' }, current)).toBeNull();
     expect(getDisplaySettingsUpdateFromMessage({ action: 'THEME_CHANGED', requestedHandler: 'OTHER', theme: 'light' }, current)).toBeNull();
+    expect(getDisplaySettingsUpdateFromMessage({ action: 'UI_STYLE_CHANGED', uiStyle: 'retro' }, current)).toBeNull();
     expect(getDisplaySettingsUpdateFromMessage({ action: 'LANGUAGE_CHANGED', language: 'en' }, current)).toBeNull();
   });
 
@@ -139,12 +168,14 @@ describe('display settings', () => {
       accent: 'purple',
       textSize: 'huge',
       theme: 'light',
+      uiStyle: 'modern',
     });
 
     expect(root.dataset).toMatchObject({
       accent: 'purple',
       textSize: 'huge',
       theme: 'light',
+      ui: 'modern',
     });
     expect(root.style.colorScheme).toBe('light');
   });
