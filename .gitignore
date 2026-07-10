@@ -1,9 +1,5 @@
 node_modules/
 dist/
-
-# Local working assets (mascot frame extraction source), not used by the build.
-/qortal_avatar
-/qortal_avatar_unique_frames/
 .env
 .env.*
 *.local
