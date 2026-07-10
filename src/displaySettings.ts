@@ -1,9 +1,11 @@
 export const ACCENT_VALUES = ['green', 'blue', 'orange', 'purple', 'red', 'teal', 'cyan', 'pink', 'yellow'] as const;
 export const TEXT_SIZE_VALUES = ['extra-small', 'small', 'medium', 'large', 'extra-large', 'huge'] as const;
+export const UI_STYLE_VALUES = ['classic', 'modern', 'chibi'] as const;
 
 export type QdnAccent = (typeof ACCENT_VALUES)[number];
 export type QdnTheme = 'dark' | 'light';
 export type QdnTextSize = (typeof TEXT_SIZE_VALUES)[number];
+export type QdnUiStyle = (typeof UI_STYLE_VALUES)[number];
 
 export const TEXT_SIZE_SCALE = {
   'extra-small': 0.88,
@@ -18,18 +20,21 @@ export type QdnDisplaySettings = {
   accent: QdnAccent;
   textSize: QdnTextSize;
   theme: QdnTheme;
+  uiStyle: QdnUiStyle;
 };
 
 type QdnHostWindow = Window & {
   _qdnAccent?: unknown;
   _qdnTextSize?: unknown;
   _qdnTheme?: unknown;
+  _qdnUiStyle?: unknown;
 };
 
 export const DEFAULT_DISPLAY_SETTINGS: QdnDisplaySettings = {
   accent: 'blue',
   textSize: 'medium',
   theme: 'dark',
+  uiStyle: 'classic',
 };
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -66,6 +71,16 @@ export function normalizeTextSize(value: unknown): QdnTextSize | null {
   return TEXT_SIZE_VALUES.includes(normalized as QdnTextSize) ? (normalized as QdnTextSize) : null;
 }
 
+export function normalizeUiStyle(value: unknown): QdnUiStyle | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  const normalized = value.trim().toLowerCase();
+
+  return UI_STYLE_VALUES.includes(normalized as QdnUiStyle) ? (normalized as QdnUiStyle) : null;
+}
+
 export function getInitialDisplaySettings(): QdnDisplaySettings {
   const hostWindow = typeof window === 'undefined' ? null : (window as QdnHostWindow);
   const query = typeof window === 'undefined' ? null : new URLSearchParams(window.location?.search ?? '');
@@ -81,6 +96,9 @@ export function getInitialDisplaySettings(): QdnDisplaySettings {
       normalizeTextSize(query?.get('textSize') ?? query?.get('text-size') ?? query?.get('qdnTextSize')) ??
       normalizeTextSize(hostWindow?._qdnTextSize) ??
       DEFAULT_DISPLAY_SETTINGS.textSize,
+    uiStyle:
+      normalizeUiStyle(query?.get('uiStyle') ?? query?.get('qdnUiStyle') ?? hostWindow?._qdnUiStyle) ??
+      DEFAULT_DISPLAY_SETTINGS.uiStyle,
   };
 }
 
@@ -94,6 +112,7 @@ export function applyDisplaySettings(settings: QdnDisplaySettings) {
   root.dataset.accent = settings.accent;
   root.dataset.textSize = settings.textSize;
   root.dataset.theme = settings.theme;
+  root.dataset.ui = settings.uiStyle;
   root.style.colorScheme = settings.theme;
 }
 
@@ -120,6 +139,7 @@ export function getDisplaySettingsUpdateFromMessage(
         accent: normalizeAccent(data.accent ?? data.qdnAccent) ?? current.accent,
         textSize: normalizeTextSize(data.textSize ?? data.qdnTextSize) ?? current.textSize,
         theme: normalizeTheme(data.theme ?? data.qdnTheme) ?? current.theme,
+        uiStyle: normalizeUiStyle(data.uiStyle ?? data.qdnUiStyle) ?? current.uiStyle,
       };
     }
     case 'TEXT_SIZE_CHANGED': {
@@ -131,6 +151,11 @@ export function getDisplaySettingsUpdateFromMessage(
       const theme = normalizeTheme(data.theme ?? data.qdnTheme);
 
       return theme ? { ...current, theme } : null;
+    }
+    case 'UI_STYLE_CHANGED': {
+      const uiStyle = normalizeUiStyle(data.uiStyle ?? data.qdnUiStyle);
+
+      return uiStyle ? { ...current, uiStyle } : null;
     }
     default:
       return null;
