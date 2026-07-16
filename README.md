@@ -1,14 +1,17 @@
 # ChibiHub
 
 A QDN app for Qortium featuring Qubino, the ChibiHub mascot. Runs inside
-[Qortium Home](https://github.com/QortiumDev) as `qdn://APP/ChibiHub/ChibiHub`,
+[Qortium Home](https://github.com/QortiumDev/qortium-home) as `qdn://APP/ChibiHub/ChibiHub`,
 with a read-only browser-development fallback that talks to a local Qortium
 Core node and the public Qortal API.
 
 ## Features
 
 - Dashboard with Qortium node status and account info
-- Qortal group chat reader/sender via the Home QDN bridge
+- Group chat reader/sender via Qortium Home's QDN bridge — the chat itself is
+  Qortal-network group chat, reached through Home's cross-chain
+  `GET_QORTAL_CHAT_MESSAGES`/`SEND_QORTAL_GROUP_CHAT` actions (the browser
+  fallback reads it from the public Qortal API)
 - Inline `qdn://` links in chat messages, opened in a new Home tab (`OPEN_NEW_TAB`)
 
 ## Home display styles
@@ -44,6 +47,10 @@ npm run qdn:publish
 The publish script auto-detects the running core's API key and reads the
 preview account from `~/qortium/git/qortium-core/preview/`; override paths with
 `QORTIUM_CHIBIHUB_*` environment variables (see `scripts/publish-qdn.mjs`).
+
+## Versioning
+
+ChibiHub has not yet adopted the Qortium app versioning standard (QAVS) — `package.json` is still 0.1.0 and the build does not emit a `qortium-app.json` manifest — and will adopt it at its next republish.
 
 ## License
 
