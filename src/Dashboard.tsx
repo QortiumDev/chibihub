@@ -447,6 +447,17 @@ export function Dashboard({
               </div>
               <span className="state-pill state-ready">Ready</span>
             </div>
+            <div
+              aria-live="polite"
+              className={`account-overview-block-state account-overview-block-state-${accountBlockStatus.state}`}
+              role={accountBlockStatus.state === 'blocked' ? 'alert' : 'status'}
+            >
+              <div>
+                <span>Chat block check</span>
+                <strong>{getAccountBlockStatusLabel(accountBlockStatus)}</strong>
+              </div>
+              <p>{accountBlockStatus.detail}</p>
+            </div>
             <div className="dashboard-action-row">
               <button className="primary-action-button" type="button" onClick={onOpenChat}>
                 Open Chat
@@ -488,25 +499,11 @@ export function Dashboard({
                 </dd>
               </div>
               <div>
-                <dt>Chat block check</dt>
-                <dd>
-                  <span
-                    className={`sync-pill account-block-state-${accountBlockStatus.state}`}
-                    title={accountBlockStatus.detail}
-                  >
-                    {getAccountBlockStatusLabel(accountBlockStatus)}
-                  </span>
-                </dd>
-              </div>
-              <div>
                 <dt>Block Height</dt>
                 <dd>{snapshot.heightLabel}</dd>
               </div>
             </dl>
             <p className="qortal-node-origin">{qortalNodeContext?.origin ?? qortalNodeError}</p>
-            <p className={`account-block-detail account-block-detail-${accountBlockStatus.state}`}>
-              {accountBlockStatus.detail}
-            </p>
             <div className="metric-grid">
               <div>
                 <span>Peers</span>

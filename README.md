@@ -50,7 +50,7 @@ preview account from `~/qortium/git/qortium-core/preview/`; override paths with
 
 ## Versioning
 
-ChibiHub follows the Qortium app versioning standard (QAVS) at version `1.4.0`:
+ChibiHub follows the Qortium app versioning standard (QAVS) at version `1.4.1`:
 `1.4` is the minimum Qortium platform level and the final number is ChibiHub's
 release counter. The build reads the version from `package.json`, displays it
 in the app header, and emits `dist/qortium-app.json` for Qortium Home.

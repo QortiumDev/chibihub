@@ -31,6 +31,10 @@ export function getAccountBlockStatusLabel(status: AccountBlockStatus) {
   }
 }
 
+export function getAccountBlockMascotMood(status: AccountBlockStatus) {
+  return status.state === 'blocked' ? 'dead' as const : 'normal' as const;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === 'object' && !Array.isArray(value);
 }

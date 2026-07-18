@@ -100,7 +100,11 @@ export function getChatRoomStatus({
   return { detail: 'Qortal public group messages. Read-only in this Home build.', label: 'Read-only' };
 }
 
-export type ComposerNote = { isStatus: boolean; text: string };
+export type ComposerNote = { isStatus: boolean; text: string } | null;
+
+export function getSendButtonLabel(isSending: boolean) {
+  return isSending ? 'Sending…' : 'Send';
+}
 
 export function getComposerNote({
   selectedGroupIsOpen,
@@ -133,7 +137,7 @@ export function getComposerNote({
     return { isStatus: true, text: sendStatus };
   }
 
-  return { isStatus: false, text: 'Qubino can send a Qortal group message for you.' };
+  return null;
 }
 
 function ChatAvatar({
@@ -782,12 +786,15 @@ export function ChatPage({
         </div>
 
         <form className="chat-composer" onSubmit={handleSendMessage}>
-          <div className="chat-composer-qubino">
-            <QubinoMascot action={sendMascotAction} className="chat-qubino-tiny" mood={isSending ? 'curious' : 'normal'} />
-            <div className="chat-composer-note" role={composerNote.isStatus ? 'status' : undefined}>
+          {composerNote ? (
+            <div
+              aria-live={composerNote.isStatus ? 'polite' : undefined}
+              className="chat-composer-note"
+              role={composerNote.isStatus ? 'status' : undefined}
+            >
               {composerNote.text}
             </div>
-          </div>
+          ) : null}
 
           {replyTarget ? (
             <div className="chat-reply-target">
@@ -804,8 +811,20 @@ export function ChatPage({
               rows={2}
               value={draftMessage}
             />
-            <button disabled={!selectedGroup || !sendAvailable || isSending || !draftMessage.trim()} type="submit">
-              {isSending ? 'Sending...' : 'Send'}
+            <button
+              aria-label={isSending ? 'Sending message' : 'Send message'}
+              className="chat-qubino-send"
+              data-sending={isSending ? 'true' : undefined}
+              disabled={!selectedGroup || !sendAvailable || isSending || !draftMessage.trim()}
+              type="submit"
+            >
+              <QubinoMascot
+                action={sendMascotAction}
+                className="chat-qubino-send-image"
+                idleAfterMs={0}
+                mood={isSending ? 'curious' : 'normal'}
+              />
+              <span>{getSendButtonLabel(isSending)}</span>
             </button>
           </div>
         </form>

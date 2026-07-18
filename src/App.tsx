@@ -13,12 +13,14 @@ import {
 } from './displaySettings';
 import {
   CHECKING_ACCOUNT_BLOCK_STATUS,
+  getAccountBlockMascotMood,
   getAccountBlockStatusLabel,
   loadAccountBlockStatus,
   type AccountBlockStatus,
 } from './accountBlockStatus';
 import { ChatPage } from './ChatPage';
 import { Dashboard } from './Dashboard';
+import { QubinoMascot } from './QubinoMascot';
 import { getEnterIntent, shouldEnterDashboardAfterUnlock } from './entryFlow';
 import qubinoTintLogo from './assets/qubino-bw.png';
 import { loadQortalNodeContext, type QortalNodeContext } from './nodeContext';
@@ -43,8 +45,8 @@ function prefersReducedMotion() {
   return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function QubinoLogo({ className }: { className: string }) {
-  return <img className={className} src={qubinoTintLogo} alt="ChibiHub Qubino logo" />;
+function QubinoLogo({ blocked, className }: { blocked: boolean; className: string }) {
+  return <QubinoMascot className={className} idleAfterMs={0} mood={blocked ? 'dead' : 'normal'} />;
 }
 
 function QubinoMark({ className }: { className: string }) {
@@ -381,7 +383,7 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
       <section className="entry-stage" aria-labelledby="entry-title">
         <div className="entry-card">
           <div className="card-logo-wrap" aria-hidden="true">
-            <QubinoLogo className="card-logo" />
+            <QubinoLogo blocked={getAccountBlockMascotMood(accountBlockStatus) === 'dead'} className="card-logo" />
           </div>
 
           <div className="entry-heading reveal reveal-one">
