@@ -426,6 +426,55 @@ h1 {
   margin-top: 28px;
 }
 
+.entry-node-status {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.entry-node-status > div {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  min-height: 66px;
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  padding: 9px 11px;
+}
+
+.entry-node-status span,
+.entry-node-status small {
+  color: var(--text-secondary);
+  font-size: var(--font-11);
+  line-height: 1.3;
+}
+
+.entry-node-status span {
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.entry-node-status strong {
+  color: var(--text-primary);
+  font-size: var(--font-13);
+  line-height: 1.25;
+}
+
+.entry-node-status .account-block-state-blocked {
+  border-color: var(--notice-border);
+  background: var(--notice-bg);
+}
+
+.entry-node-status .account-block-state-blocked strong,
+.entry-node-status .account-block-state-blocked small {
+  color: var(--notice-text);
+}
+
 .account-row,
 .account-loading {
   width: 100%;
@@ -964,6 +1013,39 @@ h1 {
   color: var(--ready-text);
   font-size: var(--font-12);
   padding: 0 9px;
+}
+
+.sync-pill.account-block-state-blocked {
+  border-color: var(--notice-border);
+  background: var(--notice-bg);
+  color: var(--notice-text);
+}
+
+.sync-pill.account-block-state-unavailable,
+.sync-pill.account-block-state-checking {
+  border-color: var(--panel-border);
+  background: var(--panel-bg);
+  color: var(--text-secondary);
+}
+
+.account-block-detail {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: var(--font-11);
+  line-height: 1.4;
+}
+
+.account-block-detail-blocked {
+  color: var(--notice-text);
+}
+
+.qortal-node-origin {
+  margin: 8px 0 0;
+  overflow-wrap: anywhere;
+  color: var(--text-muted);
+  font-family: "Illinois Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: var(--font-11);
+  line-height: 1.35;
 }
 
 .metric-grid {
@@ -1560,6 +1642,10 @@ h1 {
     max-width: 100%;
     font-size: var(--font-17);
   }
+
+  .entry-node-status {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 1180px) {
@@ -2025,10 +2111,10 @@ h1 {
   z-index: 1;
   display: grid;
   grid-template-columns: minmax(250px, 340px) minmax(0, 1fr);
-  gap: 20px;
+  gap: 14px;
   max-width: 1480px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 16px;
 }
 
 :root[data-ui="fun"] .chat-active .chat-stage {
@@ -2155,7 +2241,7 @@ h1 {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
 }
 
 :root[data-ui="fun"] .chat-room-actions {
@@ -2455,15 +2541,18 @@ h1 {
   filter: var(--logo-accent-filter) drop-shadow(0 0 18px rgba(var(--accent-rgb), 0.35));
 }
 
-:root[data-ui="fun"] .chat-qubino-mini {
-  width: 92px;
-  height: 92px;
-  filter: var(--logo-accent-filter) drop-shadow(0 0 12px rgba(var(--accent-rgb), 0.28));
+:root[data-ui="fun"] .chat-qubino-tiny {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  filter: var(--logo-accent-filter) drop-shadow(0 0 8px rgba(var(--accent-rgb), 0.24));
 }
 
 :root[data-ui="fun"] .chat-composer {
   display: grid;
-  margin-top: 20px;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 12px;
 }
 
 :root[data-ui="fun"] .chat-active .chat-composer {
@@ -2473,7 +2562,15 @@ h1 {
 :root[data-ui="fun"] .chat-composer-qubino {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
+}
+
+:root[data-ui="fun"] .chat-composer-note {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+  font-size: var(--font-13);
+  line-height: 1.35;
 }
 
 :root[data-ui="fun"] .chat-reply-target {
@@ -2486,7 +2583,7 @@ h1 {
   font-size: var(--font-14);
   line-height: 1.35;
   overflow-wrap: anywhere;
-  padding: 9px 11px;
+  padding: 7px 10px;
 }
 
 :root[data-ui="fun"] .chat-reply-target span {
@@ -2507,7 +2604,7 @@ h1 {
 
 :root[data-ui="fun"] .chat-composer textarea {
   width: 100%;
-  min-height: 82px;
+  min-height: 56px;
   resize: vertical;
   background: var(--cartoon-input-bg);
   color: var(--text-primary);
@@ -2540,17 +2637,8 @@ h1 {
   opacity: 0.62;
 }
 
-:root[data-ui="fun"] .chat-composer .qubino-speech-bubble {
-  font-size: var(--font-14);
-  padding: 10px 13px;
-}
-
-:root[data-ui="fun"] .chat-composer {
-  margin-top: 20px;
-}
-
 :root[data-ui="fun"] .chat-error {
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   padding: 12px 14px;
 }
 
@@ -2821,10 +2909,10 @@ h1 {
   z-index: 1;
   display: grid;
   grid-template-columns: minmax(220px, var(--chat-sidebar-width)) minmax(0, 1fr);
-  gap: 16px;
+  gap: 12px;
   max-width: var(--layout-wide-max);
   margin: 0 auto;
-  padding: 20px;
+  padding: 14px;
 }
 
 .chat-active .chat-stage {
@@ -3005,7 +3093,7 @@ h1 {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
 }
 
 .chat-room-actions {
@@ -3297,15 +3385,18 @@ h1 {
   filter: var(--logo-accent-filter) drop-shadow(0 0 18px rgba(var(--accent-rgb), 0.25));
 }
 
-.chat-qubino-mini {
-  width: 92px;
-  height: 92px;
-  filter: var(--logo-accent-filter) drop-shadow(0 0 12px rgba(var(--accent-rgb), 0.2));
+.chat-qubino-tiny {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  filter: var(--logo-accent-filter) drop-shadow(0 0 8px rgba(var(--accent-rgb), 0.2));
 }
 
 .chat-composer {
   display: grid;
-  margin-top: 20px;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 12px;
 }
 
 .chat-active .chat-composer {
@@ -3315,7 +3406,15 @@ h1 {
 .chat-composer-qubino {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
+}
+
+.chat-composer-note {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+  font-size: var(--font-13);
+  line-height: 1.35;
 }
 
 .chat-reply-target {
@@ -3330,7 +3429,7 @@ h1 {
   font-size: var(--font-14);
   line-height: 1.35;
   overflow-wrap: anywhere;
-  padding: 9px 11px;
+  padding: 7px 10px;
 }
 
 .chat-reply-target span {
@@ -3351,7 +3450,7 @@ h1 {
 
 .chat-composer textarea {
   width: 100%;
-  min-height: 82px;
+  min-height: 56px;
   resize: vertical;
   border: 1px solid var(--panel-border);
   border-radius: 8px;
@@ -3388,13 +3487,8 @@ h1 {
   opacity: 0.62;
 }
 
-.chat-composer .qubino-speech-bubble {
-  font-size: var(--font-14);
-  padding: 10px 13px;
-}
-
 .chat-error {
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   padding: 12px 14px;
 }
 

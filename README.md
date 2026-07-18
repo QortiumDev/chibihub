@@ -7,7 +7,9 @@ Core node and the public Qortal API.
 
 ## Features
 
-- Dashboard with Qortium node status and account info
+- Dashboard with Qortal node source/status and account info
+- Local/public Qortal node visibility on entry and dashboard, plus a selected-account
+  check against that node's standard `blockedAddresses` and `blockedNames` lists
 - Qortal group chat reader and public-group sender via Qortium Home's QDN
   bridge. The browser fallback reads the same network from the public Qortal
   API.
@@ -48,7 +50,10 @@ preview account from `~/qortium/git/qortium-core/preview/`; override paths with
 
 ## Versioning
 
-ChibiHub has not yet adopted the Qortium app versioning standard (QAVS) — `package.json` is still 0.1.0 and the build does not emit a `qortium-app.json` manifest — and will adopt it at its next republish.
+ChibiHub follows the Qortium app versioning standard (QAVS) at version `1.4.0`:
+`1.4` is the minimum Qortium platform level and the final number is ChibiHub's
+release counter. The build reads the version from `package.json`, displays it
+in the app header, and emits `dist/qortium-app.json` for Qortium Home.
 
 ## License
 

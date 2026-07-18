@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { getAccountBlockStatusLabel, type AccountBlockStatus } from './accountBlockStatus';
 import { loadQortalDashboardSnapshot, type QortalDashboardSnapshot } from './dashboardData';
+import type { QortalNodeContext } from './nodeContext';
 import {
   getQortalIdentityDisplayName,
   getQortalIdentityInitials,
@@ -42,7 +44,6 @@ const EMPTY_SNAPSHOT: QortalDashboardSnapshot = {
   errors: [],
   heightLabel: '—',
   loadedAt: 0,
-  nodeModeLabel: 'Qortal node',
   nodeStatusLabel: 'Loading',
   peersLabel: '—',
   qdnPeersLabel: '—',
@@ -138,14 +139,20 @@ function Panel({
 
 export function Dashboard({
   account,
+  accountBlockStatus,
   bridgeState,
   onOpenChat,
   qortalIdentity,
+  qortalNodeContext,
+  qortalNodeError,
 }: {
   account: QdnSelectedAccount;
+  accountBlockStatus: AccountBlockStatus;
   bridgeState: BridgeState | null;
   onOpenChat: () => void;
   qortalIdentity: QortalIdentity | null;
+  qortalNodeContext: QortalNodeContext | null;
+  qortalNodeError: string;
 }) {
   const [snapshot, setSnapshot] = useState<QortalDashboardSnapshot>(EMPTY_SNAPSHOT);
   const [isLoading, setIsLoading] = useState(true);
@@ -467,9 +474,28 @@ export function Dashboard({
                 <dd>{isLoading ? 'Loading' : snapshot.balanceLabel}</dd>
               </div>
               <div>
-                <dt>{snapshot.nodeModeLabel}</dt>
+                <dt>Qortal data source</dt>
+                <dd>
+                  <span className="sync-pill">
+                    {qortalNodeContext?.label ?? (qortalNodeError ? 'Unavailable' : 'Checking')}
+                  </span>
+                </dd>
+              </div>
+              <div>
+                <dt>Node sync</dt>
                 <dd>
                   <span className={`sync-pill status-${snapshot.statusTone}`}>{snapshot.nodeStatusLabel}</span>
+                </dd>
+              </div>
+              <div>
+                <dt>Chat block check</dt>
+                <dd>
+                  <span
+                    className={`sync-pill account-block-state-${accountBlockStatus.state}`}
+                    title={accountBlockStatus.detail}
+                  >
+                    {getAccountBlockStatusLabel(accountBlockStatus)}
+                  </span>
                 </dd>
               </div>
               <div>
@@ -477,6 +503,10 @@ export function Dashboard({
                 <dd>{snapshot.heightLabel}</dd>
               </div>
             </dl>
+            <p className="qortal-node-origin">{qortalNodeContext?.origin ?? qortalNodeError}</p>
+            <p className={`account-block-detail account-block-detail-${accountBlockStatus.state}`}>
+              {accountBlockStatus.detail}
+            </p>
             <div className="metric-grid">
               <div>
                 <span>Peers</span>

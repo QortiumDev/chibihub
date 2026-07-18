@@ -72,7 +72,6 @@ describe('Qortal dashboard data', () => {
     const snapshot = await loadQortalDashboardSnapshot(account, bridgeState);
 
     expect(snapshot.balanceLabel).toBe('12.50 QORT');
-    expect(snapshot.nodeModeLabel).toBe('Qortal node');
     expect(snapshot.nodeStatusLabel).toBe('100% synced');
     expect(qdnRequestMock).toHaveBeenCalledTimes(2);
     expect(qdnRequestMock.mock.calls).toEqual([

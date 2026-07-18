@@ -11,10 +11,17 @@ import {
   getInitialDisplaySettings,
   type QdnDisplaySettings,
 } from './displaySettings';
+import {
+  CHECKING_ACCOUNT_BLOCK_STATUS,
+  getAccountBlockStatusLabel,
+  loadAccountBlockStatus,
+  type AccountBlockStatus,
+} from './accountBlockStatus';
 import { ChatPage } from './ChatPage';
 import { Dashboard } from './Dashboard';
 import { getEnterIntent, shouldEnterDashboardAfterUnlock } from './entryFlow';
 import qubinoTintLogo from './assets/qubino-bw.png';
+import { loadQortalNodeContext, type QortalNodeContext } from './nodeContext';
 import { getBridgeState } from './qdnRequest';
 import {
   getQortalIdentityDisplayName,
@@ -83,11 +90,17 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
   const [qortalIdentity, setQortalIdentity] = useState<QortalIdentity | null>(null);
   const [isIdentityLoading, setIsIdentityLoading] = useState(false);
   const [identityRefreshKey, setIdentityRefreshKey] = useState(0);
+  const [accountBlockStatus, setAccountBlockStatus] = useState<AccountBlockStatus>(
+    CHECKING_ACCOUNT_BLOCK_STATUS,
+  );
+  const [qortalNodeContext, setQortalNodeContext] = useState<QortalNodeContext | null>(null);
+  const [qortalNodeError, setQortalNodeError] = useState('');
 
   const accountName = useMemo(() => getQortalIdentityDisplayName(qortalIdentity), [qortalIdentity]);
   const addressLabel = account?.address || 'No address selected';
   const canRequestUnlock = account?.isUnlocked === false && hasAction(bridgeState?.actions, 'UNLOCK_SELECTED_ACCOUNT');
   const runtimeLabel = bridgeState?.isHomeBridge ? 'Home bridge' : 'Browser demo';
+  const nodeSourceLabel = qortalNodeContext?.label ?? (qortalNodeError ? 'Qortal node source unavailable' : 'Checking Qortal node');
   const enterIntent = getEnterIntent({
     account,
     canRequestUnlock,
@@ -150,6 +163,58 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
       isActive = false;
     };
   }, [account, bridgeState, identityRefreshKey]);
+
+  useEffect(() => {
+    let isActive = true;
+
+    if (!bridgeState) {
+      setQortalNodeContext(null);
+      setQortalNodeError('');
+      return () => {
+        isActive = false;
+      };
+    }
+
+    setQortalNodeContext(null);
+    setQortalNodeError('');
+    void loadQortalNodeContext(bridgeState)
+      .then((context) => {
+        if (isActive) {
+          setQortalNodeContext(context);
+        }
+      })
+      .catch((nodeError) => {
+        if (isActive) {
+          setQortalNodeError(nodeError instanceof Error ? nodeError.message : String(nodeError));
+        }
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [bridgeState]);
+
+  useEffect(() => {
+    let isActive = true;
+
+    if (!account || isIdentityLoading || (!qortalNodeContext && !qortalNodeError)) {
+      setAccountBlockStatus(CHECKING_ACCOUNT_BLOCK_STATUS);
+      return () => {
+        isActive = false;
+      };
+    }
+
+    setAccountBlockStatus(CHECKING_ACCOUNT_BLOCK_STATUS);
+    void loadAccountBlockStatus(account, qortalIdentity?.name ?? null, qortalNodeContext).then((status) => {
+      if (isActive) {
+        setAccountBlockStatus(status);
+      }
+    });
+
+    return () => {
+      isActive = false;
+    };
+  }, [account, isIdentityLoading, qortalIdentity?.name, qortalNodeContext, qortalNodeError]);
 
   useEffect(() => {
     void refreshAccount();
@@ -289,7 +354,7 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
           <QubinoMark className="brand-mark" />
           <span>{APP_TITLE}</span>
         </div>
-        <span className="runtime-chip">{runtimeLabel}</span>
+        <span className="runtime-chip">{runtimeLabel} · {nodeSourceLabel} · {__APP_VERSION__}</span>
       </header>
 
       {hasEnteredDashboard && account?.isUnlocked ? (
@@ -304,9 +369,12 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
         ) : (
           <Dashboard
             account={account}
+            accountBlockStatus={accountBlockStatus}
             bridgeState={bridgeState}
             onOpenChat={() => setActiveView('chat')}
             qortalIdentity={qortalIdentity}
+            qortalNodeContext={qortalNodeContext}
+            qortalNodeError={qortalNodeError}
           />
         )
       ) : (
@@ -346,6 +414,24 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
             ) : (
               <div className="account-loading">No Home account selected.</div>
             )}
+          </div>
+
+          <div className="entry-node-status reveal reveal-two">
+            <div>
+              <span>Qortal data source</span>
+              <strong>{nodeSourceLabel}</strong>
+              <small>{qortalNodeContext?.origin ?? qortalNodeError}</small>
+            </div>
+            {account ? (
+              <div
+                className={`account-block-state account-block-state-${accountBlockStatus.state}`}
+                role={accountBlockStatus.state === 'blocked' ? 'alert' : 'status'}
+              >
+                <span>Chat block check</span>
+                <strong>{getAccountBlockStatusLabel(accountBlockStatus)}</strong>
+                <small>{accountBlockStatus.detail}</small>
+              </div>
+            ) : null}
           </div>
 
           {error ? (
