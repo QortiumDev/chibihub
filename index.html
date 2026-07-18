@@ -7,7 +7,7 @@
       (() => {
         const params = new URLSearchParams(window.location.search);
         const requestedUiStyle = (params.get('uiStyle') || params.get('qdnUiStyle') || '').trim().toLowerCase();
-        const uiStyle = ['classic', 'modern', 'chibi'].includes(requestedUiStyle) ? requestedUiStyle : 'classic';
+        const uiStyle = ['classic', 'modern', 'fun'].includes(requestedUiStyle) ? requestedUiStyle : 'classic';
 
         document.documentElement.dataset.ui = uiStyle;
       })();

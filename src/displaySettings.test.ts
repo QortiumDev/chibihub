@@ -30,7 +30,7 @@ describe('display settings', () => {
     expect(normalizeTextSize('extra-large')).toBe('extra-large');
     expect(normalizeTextSize('HUGE')).toBe('huge');
     expect(normalizeUiStyle('MODERN')).toBe('modern');
-    expect(normalizeUiStyle('chibi')).toBe('chibi');
+    expect(normalizeUiStyle('fun')).toBe('fun');
   });
 
   it('rejects unsupported values', () => {
@@ -38,6 +38,7 @@ describe('display settings', () => {
     expect(normalizeAccent('mauve')).toBeNull();
     expect(normalizeTextSize('extra-huge')).toBeNull();
     expect(normalizeUiStyle('retro')).toBeNull();
+    expect(normalizeUiStyle('chibi')).toBeNull();
   });
 
   it('uses the Qortium Home and qortium-chat text scale values', () => {
@@ -135,14 +136,14 @@ describe('display settings', () => {
     });
     expect(
       getDisplaySettingsUpdateFromMessage(
-        { action: 'UI_STYLE_CHANGED', requestedHandler: 'UI', uiStyle: 'chibi' },
+        { action: 'UI_STYLE_CHANGED', requestedHandler: 'UI', uiStyle: 'fun' },
         current,
       ),
     ).toEqual({
       accent: 'blue',
       textSize: 'medium',
       theme: 'dark',
-      uiStyle: 'chibi',
+      uiStyle: 'fun',
     });
   });
 

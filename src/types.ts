@@ -140,3 +140,11 @@ export type QortalActiveChats = {
   direct?: QortalChatMessage[];
   groups?: QortalActiveGroupChat[];
 };
+
+export type QortalAccountGroup = {
+  groupId?: number;
+  groupName?: string;
+  isAdmin?: boolean;
+  isOpen?: boolean;
+  [key: string]: unknown;
+};

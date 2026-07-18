@@ -1652,8 +1652,8 @@ h1 {
   }
 }
 
-/* Preserved Chibi pass. Home does not expose this uiStyle yet. */
-:root[data-ui="chibi"] {
+/* Fun pass, based on ChibiHub's original hand-drawn design. */
+:root[data-ui="fun"] {
   --topbar-height: 44px;
   --layout-wide-max: 1480px;
   --chat-sidebar-width: 340px;
@@ -1692,7 +1692,7 @@ h1 {
   font-family: var(--font-body);
 }
 
-:root[data-ui="chibi"][data-theme="light"] {
+:root[data-ui="fun"][data-theme="light"] {
   --avatar-empty-bg: #eef4fb;
   --cartoon-card-bg:
     radial-gradient(circle at 20% 8%, rgba(255, 212, 71, 0.16), transparent 24%),
@@ -1712,199 +1712,199 @@ h1 {
     rgba(255, 255, 255, 0.92);
 }
 
-:root[data-ui="chibi"][data-accent="green"] {
+:root[data-ui="fun"][data-accent="green"] {
   --accent: #22b85f;
   --accent-rgb: 34, 184, 95;
   --accent-strong: #118243;
   --accent-hue: 95deg;
 }
 
-:root[data-ui="chibi"][data-accent="blue"] {
+:root[data-ui="fun"][data-accent="blue"] {
   --accent: #34a3ff;
   --accent-rgb: 52, 163, 255;
   --accent-strong: #126dbd;
 }
 
-:root[data-ui="chibi"][data-accent="orange"] {
+:root[data-ui="fun"][data-accent="orange"] {
   --accent: #ff9f2f;
   --accent-rgb: 255, 159, 47;
   --accent-strong: #c66c09;
 }
 
-:root[data-ui="chibi"][data-accent="purple"] {
+:root[data-ui="fun"][data-accent="purple"] {
   --accent: #9e68ff;
   --accent-rgb: 158, 104, 255;
   --accent-strong: #6a37cf;
 }
 
-:root[data-ui="chibi"][data-accent="red"] {
+:root[data-ui="fun"][data-accent="red"] {
   --accent: #ff5757;
   --accent-rgb: 255, 87, 87;
   --accent-strong: #c92f2f;
 }
 
-:root[data-ui="chibi"][data-accent="teal"] {
+:root[data-ui="fun"][data-accent="teal"] {
   --accent: #24d6c9;
   --accent-rgb: 36, 214, 201;
   --accent-strong: #0f9289;
 }
 
-:root[data-ui="chibi"][data-accent="cyan"] {
+:root[data-ui="fun"][data-accent="cyan"] {
   --accent: #22c7ff;
   --accent-rgb: 34, 199, 255;
   --accent-strong: #0d86b4;
 }
 
-:root[data-ui="chibi"][data-accent="pink"] {
+:root[data-ui="fun"][data-accent="pink"] {
   --accent: #ff5aa8;
   --accent-rgb: 255, 90, 168;
   --accent-strong: #bd2e75;
 }
 
-:root[data-ui="chibi"][data-accent="yellow"] {
+:root[data-ui="fun"][data-accent="yellow"] {
   --accent: #f5c83a;
   --accent-rgb: 245, 200, 58;
   --accent-strong: #b88408;
 }
 
-:root[data-ui="chibi"] body,
-:root[data-ui="chibi"] input,
-:root[data-ui="chibi"] textarea,
-:root[data-ui="chibi"] select {
+:root[data-ui="fun"] body,
+:root[data-ui="fun"] input,
+:root[data-ui="fun"] textarea,
+:root[data-ui="fun"] select {
   font-family: var(--font-body);
 }
 
-:root[data-ui="chibi"] button,
-:root[data-ui="chibi"] h1,
-:root[data-ui="chibi"] h2,
-:root[data-ui="chibi"] .brand-lockup,
-:root[data-ui="chibi"] .runtime-chip,
-:root[data-ui="chibi"] .state-pill,
-:root[data-ui="chibi"] .metric-grid strong,
-:root[data-ui="chibi"] .status-list dd,
-:root[data-ui="chibi"] .send-qort-heading strong,
-:root[data-ui="chibi"] .chat-pill,
-:root[data-ui="chibi"] .chat-sidebar-heading,
-:root[data-ui="chibi"] .chat-room-heading {
+:root[data-ui="fun"] button,
+:root[data-ui="fun"] h1,
+:root[data-ui="fun"] h2,
+:root[data-ui="fun"] .brand-lockup,
+:root[data-ui="fun"] .runtime-chip,
+:root[data-ui="fun"] .state-pill,
+:root[data-ui="fun"] .metric-grid strong,
+:root[data-ui="fun"] .status-list dd,
+:root[data-ui="fun"] .send-qort-heading strong,
+:root[data-ui="fun"] .chat-pill,
+:root[data-ui="fun"] .chat-sidebar-heading,
+:root[data-ui="fun"] .chat-room-heading {
   font-family: var(--font-heading);
 }
 
-:root[data-ui="chibi"] .chibi-app {
+:root[data-ui="fun"] .chibi-app {
   overflow-x: hidden;
   overflow-y: auto;
 }
 
-:root[data-ui="chibi"] .app-topbar {
+:root[data-ui="fun"] .app-topbar {
   height: 44px;
   border-bottom: 3px solid var(--ink);
   box-shadow: 0 4px 0 var(--ink);
 }
 
-:root[data-ui="chibi"] .brand-lockup {
+:root[data-ui="fun"] .brand-lockup {
   font-size: var(--font-15);
   transform: rotate(-0.5deg);
 }
 
-:root[data-ui="chibi"] .runtime-chip,
-:root[data-ui="chibi"] .state-pill,
-:root[data-ui="chibi"] .sync-pill,
-:root[data-ui="chibi"] .qubino-status,
-:root[data-ui="chibi"] .chat-pill {
+:root[data-ui="fun"] .runtime-chip,
+:root[data-ui="fun"] .state-pill,
+:root[data-ui="fun"] .sync-pill,
+:root[data-ui="fun"] .qubino-status,
+:root[data-ui="fun"] .chat-pill {
   border: 2px solid var(--ink);
   border-radius: 255px 18px 230px 18px / 18px 230px 18px 255px;
   box-shadow: 2px 2px 0 var(--ink);
 }
 
-:root[data-ui="chibi"] .entry-card,
-:root[data-ui="chibi"] .dashboard-panel,
-:root[data-ui="chibi"] .quick-tools,
-:root[data-ui="chibi"] .chat-sidebar,
-:root[data-ui="chibi"] .chat-main,
-:root[data-ui="chibi"] .placeholder-row {
+:root[data-ui="fun"] .entry-card,
+:root[data-ui="fun"] .dashboard-panel,
+:root[data-ui="fun"] .quick-tools,
+:root[data-ui="fun"] .chat-sidebar,
+:root[data-ui="fun"] .chat-main,
+:root[data-ui="fun"] .placeholder-row {
   border: 3px solid var(--ink);
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
   box-shadow: var(--card-shadow);
 }
 
-:root[data-ui="chibi"] .entry-card,
-:root[data-ui="chibi"] .dashboard-panel {
+:root[data-ui="fun"] .entry-card,
+:root[data-ui="fun"] .dashboard-panel {
   background: var(--cartoon-card-bg);
 }
 
-:root[data-ui="chibi"] .entry-card::before,
-:root[data-ui="chibi"] .dashboard-panel::before {
+:root[data-ui="fun"] .entry-card::before,
+:root[data-ui="fun"] .dashboard-panel::before {
   opacity: 0.22;
 }
 
-:root[data-ui="chibi"] .entry-card {
+:root[data-ui="fun"] .entry-card {
   transform: rotate(-0.4deg);
 }
 
-:root[data-ui="chibi"] .qubino-panel {
+:root[data-ui="fun"] .qubino-panel {
   transform: rotate(-0.8deg);
 }
 
-:root[data-ui="chibi"] .account-overview-panel {
+:root[data-ui="fun"] .account-overview-panel {
   transform: rotate(0.6deg);
 }
 
-:root[data-ui="chibi"] .dashboard-main .dashboard-panel:nth-child(2) {
+:root[data-ui="fun"] .dashboard-main .dashboard-panel:nth-child(2) {
   transform: rotate(-0.55deg);
 }
 
-:root[data-ui="chibi"] .status-panel {
+:root[data-ui="fun"] .status-panel {
   transform: rotate(0.7deg);
 }
 
-:root[data-ui="chibi"] .dashboard-rail .dashboard-panel:nth-child(2) {
+:root[data-ui="fun"] .dashboard-rail .dashboard-panel:nth-child(2) {
   transform: rotate(-0.65deg);
 }
 
-:root[data-ui="chibi"] .group-panel {
+:root[data-ui="fun"] .group-panel {
   transform: rotate(-0.45deg);
 }
 
-:root[data-ui="chibi"] .feed-panel {
+:root[data-ui="fun"] .feed-panel {
   transform: rotate(0.55deg);
 }
 
-:root[data-ui="chibi"] .account-row,
-:root[data-ui="chibi"] .account-loading,
-:root[data-ui="chibi"] .qubino-character-frame,
-:root[data-ui="chibi"] .metric-grid > div,
-:root[data-ui="chibi"] .featured-app-tile,
-:root[data-ui="chibi"] .quick-tools button,
-:root[data-ui="chibi"] .send-qort-card input,
-:root[data-ui="chibi"] .primary-action-button,
-:root[data-ui="chibi"] .chat-composer textarea,
-:root[data-ui="chibi"] .notice,
-:root[data-ui="chibi"] .send-qort-note,
-:root[data-ui="chibi"] .send-qort-message,
-:root[data-ui="chibi"] .send-qort-error,
-:root[data-ui="chibi"] .send-qort-state,
-:root[data-ui="chibi"] .send-qort-resolution,
-:root[data-ui="chibi"] .chat-group-item,
-:root[data-ui="chibi"] .chat-bubble,
-:root[data-ui="chibi"] .chat-quote,
-:root[data-ui="chibi"] .chat-empty-state,
-:root[data-ui="chibi"] .chat-composer,
-:root[data-ui="chibi"] .chat-reply-target {
+:root[data-ui="fun"] .account-row,
+:root[data-ui="fun"] .account-loading,
+:root[data-ui="fun"] .qubino-character-frame,
+:root[data-ui="fun"] .metric-grid > div,
+:root[data-ui="fun"] .featured-app-tile,
+:root[data-ui="fun"] .quick-tools button,
+:root[data-ui="fun"] .send-qort-card input,
+:root[data-ui="fun"] .primary-action-button,
+:root[data-ui="fun"] .chat-composer textarea,
+:root[data-ui="fun"] .notice,
+:root[data-ui="fun"] .send-qort-note,
+:root[data-ui="fun"] .send-qort-message,
+:root[data-ui="fun"] .send-qort-error,
+:root[data-ui="fun"] .send-qort-state,
+:root[data-ui="fun"] .send-qort-resolution,
+:root[data-ui="fun"] .chat-group-item,
+:root[data-ui="fun"] .chat-bubble,
+:root[data-ui="fun"] .chat-quote,
+:root[data-ui="fun"] .chat-empty-state,
+:root[data-ui="fun"] .chat-composer,
+:root[data-ui="fun"] .chat-reply-target {
   border: 2px solid var(--ink);
   border-radius: 220px 16px 210px 18px / 18px 210px 16px 220px;
   box-shadow: 3px 3px 0 var(--ink);
 }
 
-:root[data-ui="chibi"] .unlock-button,
-:root[data-ui="chibi"] .enter-button,
-:root[data-ui="chibi"] .primary-action-button,
-:root[data-ui="chibi"] .sound-replay-button,
-:root[data-ui="chibi"] .send-qort-card button,
-:root[data-ui="chibi"] .chat-composer button,
-:root[data-ui="chibi"] .chat-refresh-button,
-:root[data-ui="chibi"] .quick-tools button,
-:root[data-ui="chibi"] .featured-app-tile,
-:root[data-ui="chibi"] .chat-back-button,
-:root[data-ui="chibi"] .chat-group-item {
+:root[data-ui="fun"] .unlock-button,
+:root[data-ui="fun"] .enter-button,
+:root[data-ui="fun"] .primary-action-button,
+:root[data-ui="fun"] .sound-replay-button,
+:root[data-ui="fun"] .send-qort-card button,
+:root[data-ui="fun"] .chat-composer button,
+:root[data-ui="fun"] .chat-refresh-button,
+:root[data-ui="fun"] .quick-tools button,
+:root[data-ui="fun"] .featured-app-tile,
+:root[data-ui="fun"] .chat-back-button,
+:root[data-ui="fun"] .chat-group-item {
   border: 3px solid var(--ink);
   border-radius: 255px 16px 235px 18px / 18px 235px 16px 255px;
   box-shadow: 4px 4px 0 var(--ink);
@@ -1914,61 +1914,61 @@ h1 {
     transform 120ms ease;
 }
 
-:root[data-ui="chibi"] .unlock-button:hover,
-:root[data-ui="chibi"] .enter-button:hover:not(:disabled),
-:root[data-ui="chibi"] .primary-action-button:hover,
-:root[data-ui="chibi"] .sound-replay-button:hover,
-:root[data-ui="chibi"] .send-qort-card button:hover:not(:disabled),
-:root[data-ui="chibi"] .chat-composer button:hover:not(:disabled),
-:root[data-ui="chibi"] .chat-refresh-button:hover:not(:disabled),
-:root[data-ui="chibi"] .quick-tools button:hover:not(:disabled),
-:root[data-ui="chibi"] .featured-app-tile:hover:not(:disabled),
-:root[data-ui="chibi"] .chat-back-button:hover,
-:root[data-ui="chibi"] .chat-group-item:hover {
+:root[data-ui="fun"] .unlock-button:hover,
+:root[data-ui="fun"] .enter-button:hover:not(:disabled),
+:root[data-ui="fun"] .primary-action-button:hover,
+:root[data-ui="fun"] .sound-replay-button:hover,
+:root[data-ui="fun"] .send-qort-card button:hover:not(:disabled),
+:root[data-ui="fun"] .chat-composer button:hover:not(:disabled),
+:root[data-ui="fun"] .chat-refresh-button:hover:not(:disabled),
+:root[data-ui="fun"] .quick-tools button:hover:not(:disabled),
+:root[data-ui="fun"] .featured-app-tile:hover:not(:disabled),
+:root[data-ui="fun"] .chat-back-button:hover,
+:root[data-ui="fun"] .chat-group-item:hover {
   filter: brightness(1.12) saturate(1.08);
   transform: translate(-1px, -2px) rotate(-0.6deg) scale(1.04);
 }
 
-:root[data-ui="chibi"] .unlock-button:active,
-:root[data-ui="chibi"] .enter-button:active:not(:disabled),
-:root[data-ui="chibi"] .primary-action-button:active,
-:root[data-ui="chibi"] .sound-replay-button:active,
-:root[data-ui="chibi"] .send-qort-card button:active:not(:disabled),
-:root[data-ui="chibi"] .chat-composer button:active:not(:disabled),
-:root[data-ui="chibi"] .chat-refresh-button:active:not(:disabled),
-:root[data-ui="chibi"] .quick-tools button:active:not(:disabled),
-:root[data-ui="chibi"] .featured-app-tile:active:not(:disabled),
-:root[data-ui="chibi"] .chat-back-button:active,
-:root[data-ui="chibi"] .chat-group-item:active {
+:root[data-ui="fun"] .unlock-button:active,
+:root[data-ui="fun"] .enter-button:active:not(:disabled),
+:root[data-ui="fun"] .primary-action-button:active,
+:root[data-ui="fun"] .sound-replay-button:active,
+:root[data-ui="fun"] .send-qort-card button:active:not(:disabled),
+:root[data-ui="fun"] .chat-composer button:active:not(:disabled),
+:root[data-ui="fun"] .chat-refresh-button:active:not(:disabled),
+:root[data-ui="fun"] .quick-tools button:active:not(:disabled),
+:root[data-ui="fun"] .featured-app-tile:active:not(:disabled),
+:root[data-ui="fun"] .chat-back-button:active,
+:root[data-ui="fun"] .chat-group-item:active {
   box-shadow: 1px 1px 0 var(--ink);
   transform: translate(3px, 3px) scale(0.97, 0.92);
 }
 
-:root[data-ui="chibi"] .quick-tools button:nth-child(even),
-:root[data-ui="chibi"] .featured-app-tile:nth-child(odd),
-:root[data-ui="chibi"] .chat-group-item:nth-child(even) {
+:root[data-ui="fun"] .quick-tools button:nth-child(even),
+:root[data-ui="fun"] .featured-app-tile:nth-child(odd),
+:root[data-ui="fun"] .chat-group-item:nth-child(even) {
   transform: rotate(0.65deg);
 }
 
-:root[data-ui="chibi"] .quick-tools button:nth-child(odd),
-:root[data-ui="chibi"] .featured-app-tile:nth-child(even),
-:root[data-ui="chibi"] .chat-group-item:nth-child(odd) {
+:root[data-ui="fun"] .quick-tools button:nth-child(odd),
+:root[data-ui="fun"] .featured-app-tile:nth-child(even),
+:root[data-ui="fun"] .chat-group-item:nth-child(odd) {
   transform: rotate(-0.55deg);
 }
 
-:root[data-ui="chibi"] .account-avatar,
-:root[data-ui="chibi"] .dashboard-avatar,
-:root[data-ui="chibi"] .chat-avatar {
+:root[data-ui="fun"] .account-avatar,
+:root[data-ui="fun"] .dashboard-avatar,
+:root[data-ui="fun"] .chat-avatar {
   border: 3px solid var(--ink);
   box-shadow: 3px 3px 0 var(--ink);
 }
 
-:root[data-ui="chibi"] .qubino-speech-bubble,
-:root[data-ui="chibi"] .dashboard-data-note,
-:root[data-ui="chibi"] .send-qort-state,
-:root[data-ui="chibi"] .send-qort-message,
-:root[data-ui="chibi"] .send-qort-error,
-:root[data-ui="chibi"] .send-qort-note {
+:root[data-ui="fun"] .qubino-speech-bubble,
+:root[data-ui="fun"] .dashboard-data-note,
+:root[data-ui="fun"] .send-qort-state,
+:root[data-ui="fun"] .send-qort-message,
+:root[data-ui="fun"] .send-qort-error,
+:root[data-ui="fun"] .send-qort-note {
   position: relative;
   border: 3px solid var(--ink);
   border-radius: 220px 18px 230px 16px / 18px 230px 16px 220px;
@@ -1977,9 +1977,9 @@ h1 {
   color: var(--text-primary);
 }
 
-:root[data-ui="chibi"] .qubino-speech-bubble::after,
-:root[data-ui="chibi"] .dashboard-data-note::after,
-:root[data-ui="chibi"] .send-qort-state::after {
+:root[data-ui="fun"] .qubino-speech-bubble::after,
+:root[data-ui="fun"] .dashboard-data-note::after,
+:root[data-ui="fun"] .send-qort-state::after {
   position: absolute;
   bottom: -13px;
   left: 28px;
@@ -1992,35 +1992,35 @@ h1 {
   transform: rotate(45deg);
 }
 
-:root[data-ui="chibi"] .qubino-panel .qubino-speech-bubble {
+:root[data-ui="fun"] .qubino-panel .qubino-speech-bubble {
   max-width: 245px;
   margin-top: 16px;
   padding: 12px 14px;
 }
 
-:root[data-ui="chibi"] .dashboard-data-note {
+:root[data-ui="fun"] .dashboard-data-note {
   max-width: 520px;
   margin-left: calc((100vw - min(1480px, calc(100vw - 40px))) / 2 + 20px);
   padding: 13px 16px;
 }
 
-:root[data-ui="chibi"] .send-qort-state,
-:root[data-ui="chibi"] .send-qort-message,
-:root[data-ui="chibi"] .send-qort-error,
-:root[data-ui="chibi"] .send-qort-note {
+:root[data-ui="fun"] .send-qort-state,
+:root[data-ui="fun"] .send-qort-message,
+:root[data-ui="fun"] .send-qort-error,
+:root[data-ui="fun"] .send-qort-note {
   padding: 11px 13px;
 }
 
-:root[data-ui="chibi"] .send-qort-state::after {
+:root[data-ui="fun"] .send-qort-state::after {
   left: 22px;
 }
 
-:root[data-ui="chibi"] .chibi-app.chat-active {
+:root[data-ui="fun"] .chibi-app.chat-active {
   height: 100vh;
   overflow: hidden;
 }
 
-:root[data-ui="chibi"] .chat-stage {
+:root[data-ui="fun"] .chat-stage {
   position: relative;
   z-index: 1;
   display: grid;
@@ -2031,64 +2031,72 @@ h1 {
   padding: 20px;
 }
 
-:root[data-ui="chibi"] .chat-active .chat-stage {
+:root[data-ui="fun"] .chat-active .chat-stage {
   height: calc(100vh - 44px);
   min-height: 0;
   overflow: hidden;
 }
 
-:root[data-ui="chibi"] .chat-sidebar,
-:root[data-ui="chibi"] .chat-main {
+:root[data-ui="fun"] .chat-sidebar,
+:root[data-ui="fun"] .chat-main {
   min-width: 0;
   background: var(--cartoon-card-bg);
   padding: 16px;
 }
 
-:root[data-ui="chibi"] .chat-sidebar {
+:root[data-ui="fun"] .chat-sidebar {
   align-self: start;
   transform: rotate(-0.5deg);
 }
 
-:root[data-ui="chibi"] .chat-active .chat-sidebar {
+:root[data-ui="fun"] .chat-active .chat-sidebar {
   align-self: stretch;
   height: 100%;
   overflow-y: auto;
 }
 
-:root[data-ui="chibi"] .chat-main {
+:root[data-ui="fun"] .chat-main {
   min-height: 620px;
   transform: rotate(0.35deg);
 }
 
-:root[data-ui="chibi"] .chat-active .chat-main {
+:root[data-ui="fun"] .chat-active .chat-main {
   display: flex;
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
 }
 
-:root[data-ui="chibi"] .chat-sidebar-heading h2,
-:root[data-ui="chibi"] .chat-room-heading h2 {
+:root[data-ui="fun"] .chat-sidebar-heading h2,
+:root[data-ui="fun"] .chat-room-heading h2 {
   margin: 0;
   color: var(--text-primary);
   font-size: var(--font-20);
 }
 
-:root[data-ui="chibi"] .chat-sidebar-heading p,
-:root[data-ui="chibi"] .chat-room-heading p,
-:root[data-ui="chibi"] .chat-loading {
+:root[data-ui="fun"] .chat-sidebar-heading p,
+:root[data-ui="fun"] .chat-room-heading p,
+:root[data-ui="fun"] .chat-loading {
   margin: 5px 0 0;
   color: var(--text-secondary);
-  font-size: var(--font-13);
+  font-size: var(--font-14);
   line-height: 1.35;
 }
 
-:root[data-ui="chibi"] .chat-sidebar-heading {
+:root[data-ui="fun"] .chat-sidebar-heading {
   display: grid;
   gap: 4px;
 }
 
-:root[data-ui="chibi"] .chat-back-button {
+:root[data-ui="fun"] .chat-account-context,
+:root[data-ui="fun"] .chat-group-empty {
+  border: 2px solid var(--ink);
+  border-radius: 220px 16px 210px 18px / 18px 210px 16px 220px;
+  background: var(--cartoon-surface-bg);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+:root[data-ui="fun"] .chat-back-button {
   justify-self: start;
   min-height: 34px;
   margin-top: 8px;
@@ -2096,23 +2104,23 @@ h1 {
   color: var(--text-primary);
   cursor: pointer;
   font-family: var(--font-heading);
-  font-size: var(--font-13);
+  font-size: var(--font-14);
   font-weight: 900;
   padding: 0 12px;
 }
 
-:root[data-ui="chibi"] .chat-back-button-empty {
+:root[data-ui="fun"] .chat-back-button-empty {
   grid-column: 1 / -1;
   justify-self: start;
 }
 
-:root[data-ui="chibi"] .chat-group-list {
+:root[data-ui="fun"] .chat-group-list {
   display: grid;
   gap: 12px;
   margin-top: 18px;
 }
 
-:root[data-ui="chibi"] .chat-group-item {
+:root[data-ui="fun"] .chat-group-item {
   display: grid;
   gap: 5px;
   width: 100%;
@@ -2124,21 +2132,25 @@ h1 {
   text-align: left;
 }
 
-:root[data-ui="chibi"] .chat-group-item.active {
+:root[data-ui="fun"] .chat-group-item strong {
+  font-size: var(--font-16);
+}
+
+:root[data-ui="fun"] .chat-group-item.active {
   background: rgba(var(--accent-rgb), 0.22);
 }
 
-:root[data-ui="chibi"] .chat-group-item span,
-:root[data-ui="chibi"] .chat-group-item small {
+:root[data-ui="fun"] .chat-group-item span,
+:root[data-ui="fun"] .chat-group-item small {
   overflow: hidden;
   color: var(--text-secondary);
-  font-size: var(--font-12);
+  font-size: var(--font-13);
   line-height: 1.3;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-:root[data-ui="chibi"] .chat-room-heading {
+:root[data-ui="fun"] .chat-room-heading {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -2146,7 +2158,7 @@ h1 {
   margin-bottom: 18px;
 }
 
-:root[data-ui="chibi"] .chat-room-actions {
+:root[data-ui="fun"] .chat-room-actions {
   display: flex;
   flex: 0 0 auto;
   flex-wrap: wrap;
@@ -2154,28 +2166,32 @@ h1 {
   gap: 10px;
 }
 
-:root[data-ui="chibi"] .chat-refresh-button {
+:root[data-ui="fun"] .chat-refresh-button {
   min-height: 34px;
   background: var(--cartoon-surface-bg);
   color: var(--text-primary);
   cursor: pointer;
-  font-size: var(--font-13);
+  font-size: var(--font-14);
   font-weight: 900;
   padding: 0 12px;
 }
 
-:root[data-ui="chibi"] .chat-refresh-button:disabled {
+:root[data-ui="fun"] .chat-pill {
+  font-size: var(--font-14);
+}
+
+:root[data-ui="fun"] .chat-refresh-button:disabled {
   cursor: not-allowed;
   filter: grayscale(0.35);
   opacity: 0.6;
 }
 
-:root[data-ui="chibi"] .chat-message-list {
+:root[data-ui="fun"] .chat-message-list {
   display: grid;
   gap: 14px;
 }
 
-:root[data-ui="chibi"] .chat-active .chat-message-list {
+:root[data-ui="fun"] .chat-active .chat-message-list {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
@@ -2183,29 +2199,29 @@ h1 {
   scroll-behavior: smooth;
 }
 
-:root[data-ui="chibi"] .chat-message {
+:root[data-ui="fun"] .chat-message {
   display: flex;
   gap: 10px;
   max-width: min(760px, 100%);
 }
 
-:root[data-ui="chibi"] .chat-message-own {
+:root[data-ui="fun"] .chat-message-own {
   flex-direction: row-reverse;
   justify-self: end;
   margin-left: auto;
 }
 
-:root[data-ui="chibi"] .chat-message-other {
+:root[data-ui="fun"] .chat-message-other {
   justify-self: start;
 }
 
-:root[data-ui="chibi"] .chat-message-stack {
+:root[data-ui="fun"] .chat-message-stack {
   display: grid;
   gap: 5px;
   min-width: 0;
 }
 
-:root[data-ui="chibi"] .chat-avatar {
+:root[data-ui="fun"] .chat-avatar {
   flex: 0 0 auto;
   width: 38px;
   height: 38px;
@@ -2213,50 +2229,51 @@ h1 {
   object-fit: cover;
 }
 
-:root[data-ui="chibi"] .chat-avatar-fallback {
+:root[data-ui="fun"] .chat-avatar-fallback {
   display: grid;
   place-items: center;
   background: var(--button-bg);
   color: var(--button-text);
   font-family: var(--font-heading);
-  font-size: var(--font-12);
+  font-size: var(--font-13);
   font-weight: 900;
 }
 
-:root[data-ui="chibi"] .chat-sender {
+:root[data-ui="fun"] .chat-sender {
   color: var(--text-secondary);
   font-family: var(--font-heading);
-  font-size: var(--font-12);
+  font-size: var(--font-13);
   font-weight: 900;
   padding-left: 4px;
 }
 
-:root[data-ui="chibi"] .chat-message-own .chat-sender {
+:root[data-ui="fun"] .chat-message-own .chat-sender {
   padding-left: 0;
   padding-right: 4px;
   text-align: right;
 }
 
-:root[data-ui="chibi"] .chat-bubble {
+:root[data-ui="fun"] .chat-bubble {
   max-width: min(620px, calc(100vw - 110px));
   background: var(--cartoon-message-bg);
   color: var(--text-primary);
   padding: 12px 14px;
 }
 
-:root[data-ui="chibi"] .chat-message-own .chat-bubble {
+:root[data-ui="fun"] .chat-message-own .chat-bubble {
   background: var(--cartoon-own-message-bg);
   color: var(--cartoon-own-message-text);
 }
 
-:root[data-ui="chibi"] .chat-bubble p {
+:root[data-ui="fun"] .chat-bubble p {
   margin: 0;
+  font-size: var(--font-16);
   line-height: 1.45;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 
-:root[data-ui="chibi"] .chat-link {
+:root[data-ui="fun"] .chat-link {
   background: none;
   border: none;
   padding: 0;
@@ -2270,32 +2287,32 @@ h1 {
   white-space: pre-wrap;
 }
 
-:root[data-ui="chibi"] .chat-link:hover:not(:disabled),
-:root[data-ui="chibi"] .chat-link:focus-visible {
+:root[data-ui="fun"] .chat-link:hover:not(:disabled),
+:root[data-ui="fun"] .chat-link:focus-visible {
   color: var(--accent);
   text-decoration-thickness: 2px;
 }
 
-:root[data-ui="chibi"] .chat-link:disabled {
+:root[data-ui="fun"] .chat-link:disabled {
   color: inherit;
   cursor: default;
   text-decoration: underline dotted;
 }
 
-:root[data-ui="chibi"] .chat-message-own .chat-link {
+:root[data-ui="fun"] .chat-message-own .chat-link {
   color: inherit;
 }
 
-:root[data-ui="chibi"] .chat-bubble footer {
+:root[data-ui="fun"] .chat-bubble footer {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
   margin-top: 7px;
   color: var(--cartoon-message-footer-text);
-  font-size: var(--font-11);
+  font-size: var(--font-12);
 }
 
-:root[data-ui="chibi"] .chat-reply-button {
+:root[data-ui="fun"] .chat-reply-button {
   min-height: 24px;
   border: 2px solid var(--ink);
   border-radius: 220px 16px 210px 18px / 18px 210px 16px 220px;
@@ -2304,37 +2321,37 @@ h1 {
   color: inherit;
   cursor: pointer;
   font-family: var(--font-heading);
-  font-size: var(--font-11);
+  font-size: var(--font-12);
   font-weight: 900;
   padding: 1px 8px;
 }
 
-:root[data-ui="chibi"] .chat-quote {
+:root[data-ui="fun"] .chat-quote {
   margin-bottom: 8px;
   background: var(--cartoon-quote-bg);
   color: var(--text-secondary);
-  font-size: var(--font-12);
+  font-size: var(--font-13);
   line-height: 1.35;
   padding: 8px 10px;
 }
 
-:root[data-ui="chibi"] .chat-image-grid {
+:root[data-ui="fun"] .chat-image-grid {
   display: grid;
   gap: 10px;
   margin-top: 10px;
 }
 
-:root[data-ui="chibi"] .chat-image,
-:root[data-ui="chibi"] .chat-image-loading,
-:root[data-ui="chibi"] .chat-image-fallback,
-:root[data-ui="chibi"] .chat-embed-chip,
-:root[data-ui="chibi"] .chat-reaction-chip {
+:root[data-ui="fun"] .chat-image,
+:root[data-ui="fun"] .chat-image-loading,
+:root[data-ui="fun"] .chat-image-fallback,
+:root[data-ui="fun"] .chat-embed-chip,
+:root[data-ui="fun"] .chat-reaction-chip {
   border: 2px solid var(--ink);
   border-radius: 220px 16px 210px 18px / 18px 210px 16px 220px;
   box-shadow: 3px 3px 0 var(--ink);
 }
 
-:root[data-ui="chibi"] .chat-image {
+:root[data-ui="fun"] .chat-image {
   display: block;
   max-width: min(420px, 100%);
   max-height: 420px;
@@ -2342,8 +2359,8 @@ h1 {
   object-fit: contain;
 }
 
-:root[data-ui="chibi"] .chat-image-loading,
-:root[data-ui="chibi"] .chat-image-fallback {
+:root[data-ui="fun"] .chat-image-loading,
+:root[data-ui="fun"] .chat-image-fallback {
   display: grid;
   min-height: 118px;
   place-items: center;
@@ -2355,23 +2372,23 @@ h1 {
   padding: 14px;
 }
 
-:root[data-ui="chibi"] .chat-image-fallback {
+:root[data-ui="fun"] .chat-image-fallback {
   background: var(--notice-bg);
   color: var(--notice-text);
 }
 
-:root[data-ui="chibi"] .chat-embed-chip-row,
-:root[data-ui="chibi"] .chat-reaction-row {
+:root[data-ui="fun"] .chat-embed-chip-row,
+:root[data-ui="fun"] .chat-reaction-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-:root[data-ui="chibi"] .chat-embed-chip-row {
+:root[data-ui="fun"] .chat-embed-chip-row {
   margin-top: 10px;
 }
 
-:root[data-ui="chibi"] .chat-embed-chip {
+:root[data-ui="fun"] .chat-embed-chip {
   display: inline-flex;
   max-width: 100%;
   min-height: 28px;
@@ -2379,24 +2396,24 @@ h1 {
   background: rgba(255, 212, 71, 0.13);
   color: var(--text-primary);
   font-family: var(--font-heading);
-  font-size: var(--font-12);
+  font-size: var(--font-13);
   font-weight: 900;
   overflow-wrap: anywhere;
   padding: 5px 9px;
 }
 
-:root[data-ui="chibi"] .chat-reaction-row {
+:root[data-ui="fun"] .chat-reaction-row {
   margin-top: -2px;
   padding-left: 8px;
 }
 
-:root[data-ui="chibi"] .chat-message-own .chat-reaction-row {
+:root[data-ui="fun"] .chat-message-own .chat-reaction-row {
   justify-content: flex-end;
   padding-left: 0;
   padding-right: 8px;
 }
 
-:root[data-ui="chibi"] .chat-reaction-chip {
+:root[data-ui="fun"] .chat-reaction-chip {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -2408,17 +2425,17 @@ h1 {
   padding: 3px 9px;
 }
 
-:root[data-ui="chibi"] .chat-reaction-chip.own {
+:root[data-ui="fun"] .chat-reaction-chip.own {
   background: rgba(var(--accent-rgb), 0.28);
   color: var(--cartoon-own-message-text);
 }
 
-:root[data-ui="chibi"] .chat-reaction-chip strong {
-  font-size: var(--font-12);
+:root[data-ui="fun"] .chat-reaction-chip strong {
+  font-size: var(--font-13);
 }
 
-:root[data-ui="chibi"] .chat-empty-state,
-:root[data-ui="chibi"] .chat-composer {
+:root[data-ui="fun"] .chat-empty-state,
+:root[data-ui="fun"] .chat-composer {
   display: flex;
   align-items: center;
   gap: 14px;
@@ -2426,86 +2443,87 @@ h1 {
   padding: 16px;
 }
 
-:root[data-ui="chibi"] .chat-empty-state {
+:root[data-ui="fun"] .chat-empty-state {
   grid-column: 1 / -1;
   justify-self: center;
   max-width: 620px;
 }
 
-:root[data-ui="chibi"] .chat-qubino {
+:root[data-ui="fun"] .chat-qubino {
   width: 172px;
   height: 172px;
   filter: var(--logo-accent-filter) drop-shadow(0 0 18px rgba(var(--accent-rgb), 0.35));
 }
 
-:root[data-ui="chibi"] .chat-qubino-mini {
+:root[data-ui="fun"] .chat-qubino-mini {
   width: 92px;
   height: 92px;
   filter: var(--logo-accent-filter) drop-shadow(0 0 12px rgba(var(--accent-rgb), 0.28));
 }
 
-:root[data-ui="chibi"] .chat-composer {
+:root[data-ui="fun"] .chat-composer {
   display: grid;
   margin-top: 20px;
 }
 
-:root[data-ui="chibi"] .chat-active .chat-composer {
+:root[data-ui="fun"] .chat-active .chat-composer {
   flex: 0 0 auto;
 }
 
-:root[data-ui="chibi"] .chat-composer-qubino {
+:root[data-ui="fun"] .chat-composer-qubino {
   display: flex;
   align-items: center;
   gap: 14px;
 }
 
-:root[data-ui="chibi"] .chat-reply-target {
+:root[data-ui="fun"] .chat-reply-target {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   background: rgba(var(--accent-rgb), 0.16);
   color: var(--text-primary);
-  font-size: var(--font-13);
+  font-size: var(--font-14);
   line-height: 1.35;
   overflow-wrap: anywhere;
   padding: 9px 11px;
 }
 
-:root[data-ui="chibi"] .chat-reply-target span {
+:root[data-ui="fun"] .chat-reply-target span {
   min-width: 0;
 }
 
-:root[data-ui="chibi"] .chat-reply-target button {
+:root[data-ui="fun"] .chat-reply-target button {
   flex: 0 0 auto;
   min-height: 30px;
   padding: 0 10px;
 }
 
-:root[data-ui="chibi"] .chat-composer-row {
+:root[data-ui="fun"] .chat-composer-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 12px;
 }
 
-:root[data-ui="chibi"] .chat-composer textarea {
+:root[data-ui="fun"] .chat-composer textarea {
   width: 100%;
   min-height: 82px;
   resize: vertical;
   background: var(--cartoon-input-bg);
   color: var(--text-primary);
   font: inherit;
+  font-size: var(--font-16);
   line-height: 1.4;
   outline: none;
   padding: 12px 14px;
 }
 
-:root[data-ui="chibi"] .chat-composer textarea:focus-visible {
+:root[data-ui="fun"] .chat-composer textarea:focus-visible {
   border-color: var(--accent);
   box-shadow: 3px 3px 0 var(--ink), 0 0 0 3px rgba(var(--accent-rgb), 0.28);
 }
 
-:root[data-ui="chibi"] .chat-composer button[type="submit"] {
+:root[data-ui="fun"] .chat-composer button[type="submit"] {
   min-width: 116px;
   background: var(--button-bg);
   color: var(--button-text);
@@ -2515,71 +2533,72 @@ h1 {
   padding: 0 18px;
 }
 
-:root[data-ui="chibi"] .chat-composer button:disabled,
-:root[data-ui="chibi"] .chat-composer textarea:disabled {
+:root[data-ui="fun"] .chat-composer button:disabled,
+:root[data-ui="fun"] .chat-composer textarea:disabled {
   cursor: not-allowed;
   filter: grayscale(0.4);
   opacity: 0.62;
 }
 
-:root[data-ui="chibi"] .chat-composer .qubino-speech-bubble {
+:root[data-ui="fun"] .chat-composer .qubino-speech-bubble {
+  font-size: var(--font-14);
   padding: 10px 13px;
 }
 
-:root[data-ui="chibi"] .chat-composer {
+:root[data-ui="fun"] .chat-composer {
   margin-top: 20px;
 }
 
-:root[data-ui="chibi"] .chat-error {
+:root[data-ui="fun"] .chat-error {
   margin-bottom: 16px;
   padding: 12px 14px;
 }
 
 @media (max-width: 900px) {
-  :root[data-ui="chibi"] .chat-stage {
+  :root[data-ui="fun"] .chat-stage {
     grid-template-columns: 1fr;
     grid-template-rows: minmax(150px, 220px) minmax(0, 1fr);
     padding: 14px;
   }
 
-  :root[data-ui="chibi"] .chat-sidebar,
-  :root[data-ui="chibi"] .chat-main,
-  :root[data-ui="chibi"] .entry-card,
-  :root[data-ui="chibi"] .dashboard-panel,
-  :root[data-ui="chibi"] .quick-tools {
+  :root[data-ui="fun"] .chat-sidebar,
+  :root[data-ui="fun"] .chat-main,
+  :root[data-ui="fun"] .entry-card,
+  :root[data-ui="fun"] .dashboard-panel,
+  :root[data-ui="fun"] .quick-tools {
     transform: none;
   }
 
-  :root[data-ui="chibi"] .chat-main {
+  :root[data-ui="fun"] .chat-main {
     min-height: 460px;
   }
 
-  :root[data-ui="chibi"] .chat-active .chat-main {
+  :root[data-ui="fun"] .chat-active .chat-main {
     min-height: 0;
   }
 }
 
 @media (max-width: 620px) {
-  :root[data-ui="chibi"] .chat-room-heading {
+  :root[data-ui="fun"] .chat-room-heading {
     display: grid;
   }
 
-  :root[data-ui="chibi"] .chat-bubble {
+  :root[data-ui="fun"] .chat-bubble {
     max-width: calc(100vw - 84px);
   }
 
-  :root[data-ui="chibi"] .chat-empty-state,
-  :root[data-ui="chibi"] .chat-composer-qubino {
+  :root[data-ui="fun"] .chat-empty-state,
+  :root[data-ui="fun"] .chat-composer-qubino {
     align-items: flex-start;
     flex-direction: column;
   }
 
-  :root[data-ui="chibi"] .chat-composer-row {
+  :root[data-ui="fun"] .chat-composer-row {
     grid-template-columns: 1fr;
   }
 }
 
-/* Home UI families. The original hand-drawn pass above remains available as uiStyle=chibi. */
+/* Home UI families. The original hand-drawn pass above remains available as uiStyle=fun. */
 :root[data-ui="classic"] {
   --topbar-height: 48px;
   --layout-wide-max: 70em;
@@ -2858,13 +2877,63 @@ h1 {
 .chat-loading {
   margin: 5px 0 0;
   color: var(--text-secondary);
-  font-size: var(--font-13);
+  font-size: var(--font-14);
   line-height: 1.35;
 }
 
 .chat-sidebar-heading {
   display: grid;
   gap: 4px;
+}
+
+.chat-account-context {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  margin-top: 16px;
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  background: var(--chat-surface-bg);
+  padding: 11px 12px;
+}
+
+.chat-account-context span,
+.chat-account-context small {
+  color: var(--text-secondary);
+  font-size: var(--font-13);
+}
+
+.chat-account-context strong,
+.chat-account-context small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-account-context strong {
+  color: var(--text-primary);
+  font-size: var(--font-15);
+}
+
+.chat-group-empty {
+  display: grid;
+  gap: 7px;
+  margin-top: 16px;
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  background: var(--chat-surface-bg);
+  color: var(--text-secondary);
+  padding: 12px;
+}
+
+.chat-group-empty strong {
+  color: var(--text-primary);
+  font-size: var(--font-14);
+}
+
+.chat-group-empty span {
+  font-size: var(--font-13);
+  line-height: 1.45;
 }
 
 .chat-back-button,
@@ -2876,7 +2945,7 @@ h1 {
   background: var(--chat-surface-bg);
   color: var(--text-primary);
   cursor: pointer;
-  font-size: var(--font-13);
+  font-size: var(--font-14);
   font-weight: 700;
   padding: 0 12px;
 }
@@ -2911,6 +2980,10 @@ h1 {
   text-align: left;
 }
 
+.chat-group-item strong {
+  font-size: var(--font-16);
+}
+
 .chat-group-item:hover,
 .chat-group-item.active {
   border-color: rgba(var(--accent-rgb), 0.42);
@@ -2921,7 +2994,7 @@ h1 {
 .chat-group-item small {
   overflow: hidden;
   color: var(--text-secondary);
-  font-size: var(--font-12);
+  font-size: var(--font-13);
   line-height: 1.3;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -2949,8 +3022,13 @@ h1 {
   opacity: 0.6;
 }
 
+.chat-pill {
+  font-size: var(--font-14);
+}
+
 .chat-message-list {
   display: grid;
+  align-content: start;
   gap: 14px;
 }
 
@@ -2999,13 +3077,13 @@ h1 {
   background: var(--button-bg);
   color: var(--button-text);
   font-family: var(--font-heading);
-  font-size: var(--font-12);
+  font-size: var(--font-13);
   font-weight: 700;
 }
 
 .chat-sender {
   color: var(--text-secondary);
-  font-size: var(--font-12);
+  font-size: var(--font-13);
   font-weight: 700;
   padding-left: 4px;
 }
@@ -3033,6 +3111,7 @@ h1 {
 
 .chat-bubble p {
   margin: 0;
+  font-size: var(--font-16);
   line-height: 1.45;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
@@ -3074,7 +3153,7 @@ h1 {
   gap: 8px;
   margin-top: 7px;
   color: var(--chat-message-footer-text);
-  font-size: var(--font-11);
+  font-size: var(--font-12);
 }
 
 .chat-reply-button {
@@ -3084,7 +3163,7 @@ h1 {
   background: var(--chat-subtle-control-bg);
   color: inherit;
   cursor: pointer;
-  font-size: var(--font-11);
+  font-size: var(--font-12);
   font-weight: 700;
   padding: 1px 8px;
 }
@@ -3095,7 +3174,7 @@ h1 {
   border-radius: 6px;
   background: var(--chat-quote-bg);
   color: var(--text-secondary);
-  font-size: var(--font-12);
+  font-size: var(--font-13);
   line-height: 1.35;
   padding: 8px 10px;
 }
@@ -3158,7 +3237,7 @@ h1 {
   align-items: center;
   background: var(--chat-subtle-control-bg);
   color: var(--text-primary);
-  font-size: var(--font-12);
+  font-size: var(--font-13);
   font-weight: 700;
   overflow-wrap: anywhere;
   padding: 5px 9px;
@@ -3192,7 +3271,7 @@ h1 {
 }
 
 .chat-reaction-chip strong {
-  font-size: var(--font-12);
+  font-size: var(--font-13);
 }
 
 .chat-empty-state,
@@ -3248,7 +3327,7 @@ h1 {
   border-radius: 8px;
   background: rgba(var(--accent-rgb), 0.1);
   color: var(--text-primary);
-  font-size: var(--font-13);
+  font-size: var(--font-14);
   line-height: 1.35;
   overflow-wrap: anywhere;
   padding: 9px 11px;
@@ -3279,6 +3358,7 @@ h1 {
   background: var(--chat-input-bg);
   color: var(--text-primary);
   font: inherit;
+  font-size: var(--font-16);
   line-height: 1.4;
   outline: none;
   padding: 12px 14px;
@@ -3309,6 +3389,7 @@ h1 {
 }
 
 .chat-composer .qubino-speech-bubble {
+  font-size: var(--font-14);
   padding: 10px 13px;
 }
 

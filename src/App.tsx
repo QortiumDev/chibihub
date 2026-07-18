@@ -82,6 +82,7 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
   const [activeView, setActiveView] = useState<AppView>('dashboard');
   const [qortalIdentity, setQortalIdentity] = useState<QortalIdentity | null>(null);
   const [isIdentityLoading, setIsIdentityLoading] = useState(false);
+  const [identityRefreshKey, setIdentityRefreshKey] = useState(0);
 
   const accountName = useMemo(() => getQortalIdentityDisplayName(qortalIdentity), [qortalIdentity]);
   const addressLabel = account?.address || 'No address selected';
@@ -119,9 +120,11 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
   }, []);
 
   useEffect(() => {
-    let isActive = true;
-
     setQortalIdentity(null);
+  }, [account?.address]);
+
+  useEffect(() => {
+    let isActive = true;
 
     if (!account) {
       setIsIdentityLoading(false);
@@ -146,7 +149,7 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
     return () => {
       isActive = false;
     };
-  }, [account, bridgeState]);
+  }, [account, bridgeState, identityRefreshKey]);
 
   useEffect(() => {
     void refreshAccount();
@@ -295,6 +298,7 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
             account={account}
             bridgeState={bridgeState}
             onBackToDashboard={() => setActiveView('dashboard')}
+            onRefreshIdentity={() => setIdentityRefreshKey((current) => current + 1)}
             qortalIdentity={qortalIdentity}
           />
         ) : (

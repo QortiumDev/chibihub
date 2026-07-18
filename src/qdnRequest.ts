@@ -8,6 +8,7 @@ export const LOCAL_READ_ACTIONS = [
   'FETCH_QDN_RESOURCE',
   'FETCH_QORTAL_RESOURCE',
   'GET_QORT_BALANCE',
+  'GET_QORTAL_ACCOUNT_GROUPS',
   'GET_QORTAL_ACCOUNT_NAMES',
   'GET_QORTAL_ACTIVE_CHATS',
   'GET_QORTAL_CHAT_MESSAGE',
@@ -495,6 +496,11 @@ async function fallbackQdnRequest<T>(request: QdnRequest): Promise<T> {
       return (await fetchQortalNodeApiData(
         request,
         `/names/address/${encodeURIComponent(getRequiredAddress(request))}`,
+      )) as T;
+    case 'GET_QORTAL_ACCOUNT_GROUPS':
+      return (await fetchQortalNodeApiData(
+        request,
+        `/groups/member/${encodeURIComponent(getRequiredAddress(request))}?limit=0&reverse=true`,
       )) as T;
     case 'GET_QORTAL_ACTIVE_CHATS':
       return (await fetchQortalNodeApiData(request, buildQortalActiveChatsPath(request))) as T;

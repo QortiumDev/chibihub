@@ -106,6 +106,25 @@ describe('qdnRequest local account fallback', () => {
     });
   });
 
+  it('fetches Qortal group privacy metadata for the selected account', async () => {
+    const fetchMock = vi.fn(async () => {
+      return new Response(JSON.stringify([{ groupId: 1091, groupName: 'Qortium', isOpen: true }]), {
+        headers: { 'content-type': 'application/json' },
+        status: 200,
+      });
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(qdnRequest({ action: 'GET_QORTAL_ACCOUNT_GROUPS', address: 'Qabc' })).resolves.toEqual([
+      { groupId: 1091, groupName: 'Qortium', isOpen: true },
+    ]);
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://api.qortal.org/groups/member/Qabc?limit=0&reverse=true',
+      { method: 'GET' },
+    );
+  });
+
   it('fetches Qortal chat messages with whitelisted query params in browser development', async () => {
     const fetchMock = vi.fn(async () => {
       return new Response(JSON.stringify([]), {
