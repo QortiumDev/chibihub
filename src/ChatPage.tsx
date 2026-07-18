@@ -66,6 +66,76 @@ function getRelativeTime(timestamp: number) {
   return formatter.format(Math.round(diffHours / 24), 'day');
 }
 
+export type ChatRoomStatus = { detail: string; label: string };
+
+export function getChatRoomStatus({
+  selectedGroup,
+  sendActionAvailable,
+}: {
+  selectedGroup: ChatGroupSummary | null;
+  sendActionAvailable: boolean;
+}): ChatRoomStatus {
+  if (!selectedGroup) {
+    return { detail: 'Pick a group to read messages.', label: 'Select a group' };
+  }
+
+  if (selectedGroup.isOpen === false) {
+    return {
+      detail: 'Qortal private group messages (encrypted). Sending stays read-only here.',
+      label: 'Private · Read-only',
+    };
+  }
+
+  if (selectedGroup.isOpen == null) {
+    return {
+      detail: "This group's privacy could not be verified, so ChibiHub keeps it read-only.",
+      label: 'Privacy unknown · Read-only',
+    };
+  }
+
+  if (sendActionAvailable) {
+    return { detail: 'Qortal public group messages. Ready to send.', label: 'Send-ready' };
+  }
+
+  return { detail: 'Qortal public group messages. Read-only in this Home build.', label: 'Read-only' };
+}
+
+export type ComposerNote = { isStatus: boolean; text: string };
+
+export function getComposerNote({
+  selectedGroupIsOpen,
+  sendActionAvailable,
+  sendStatus,
+}: {
+  selectedGroupIsOpen: boolean | null | undefined;
+  sendActionAvailable: boolean;
+  sendStatus: string;
+}): ComposerNote {
+  if (!sendActionAvailable) {
+    return { isStatus: false, text: 'Home build too old: missing SEND_QORTAL_GROUP_CHAT.' };
+  }
+
+  if (selectedGroupIsOpen === false) {
+    return {
+      isStatus: false,
+      text: 'Private Qortal group sending stays disabled until Home can encrypt it safely.',
+    };
+  }
+
+  if (selectedGroupIsOpen == null) {
+    return {
+      isStatus: false,
+      text: "Home cannot verify this group's privacy yet, so ChibiHub will not send to it.",
+    };
+  }
+
+  if (sendStatus) {
+    return { isStatus: true, text: sendStatus };
+  }
+
+  return { isStatus: false, text: 'Qubino can send a Qortal group message for you.' };
+}
+
 function ChatAvatar({
   avatarRefreshKey,
   avatarUrlOverride = null,
@@ -313,6 +383,12 @@ export function ChatPage({
   const ownSenderLabel = getQortalIdentityDisplayName(qortalIdentity);
   const boundAccountName = qortalIdentity?.name?.trim() || 'Selected Qortal account';
   const boundAccountAddress = formatAddress(account.address);
+  const roomStatus = getChatRoomStatus({ selectedGroup, sendActionAvailable });
+  const composerNote = getComposerNote({
+    selectedGroupIsOpen: selectedGroup?.isOpen,
+    sendActionAvailable,
+    sendStatus,
+  });
 
   function isFeedNearBottom() {
     const feed = feedRef.current;
@@ -654,30 +730,14 @@ export function ChatPage({
         <div className="chat-room-heading">
           <div>
             <h2>{selectedGroup?.groupName ?? 'Select a group'}</h2>
-            <p>
-              {selectedGroup?.isOpen === true
-                ? 'Qortal public group messages'
-                : selectedGroup?.isOpen === false
-                  ? 'Qortal private group messages (encrypted)'
-                  : selectedGroup
-                    ? 'Qortal group messages'
-                    : 'Pick a group to read messages.'}
-            </p>
+            {!selectedGroup ? <p>{roomStatus.detail}</p> : null}
           </div>
           {isLoadingMessages ? (
             <span className="chat-pill">Loading</span>
           ) : (
             <div className="chat-room-actions">
-              <span className="chat-pill">
-                {!selectedGroup
-                  ? 'Select a group'
-                  : selectedGroup.isOpen === false
-                    ? 'Private · Read-only'
-                    : selectedGroup.isOpen == null
-                      ? 'Privacy unknown · Read-only'
-                      : sendActionAvailable
-                        ? 'Send-ready'
-                        : 'Read-only'}
+              <span className="chat-pill" title={roomStatus.detail}>
+                {roomStatus.label}
               </span>
               <button
                 className="chat-refresh-button"
@@ -723,22 +783,10 @@ export function ChatPage({
 
         <form className="chat-composer" onSubmit={handleSendMessage}>
           <div className="chat-composer-qubino">
-            <QubinoMascot action={sendMascotAction} className="chat-qubino-mini" mood={isSending ? 'curious' : 'normal'} />
-            {!sendActionAvailable ? (
-              <div className="qubino-speech-bubble">Home build too old: missing SEND_QORTAL_GROUP_CHAT.</div>
-            ) : selectedGroup?.isOpen === false ? (
-              <div className="qubino-speech-bubble">
-                Private Qortal group sending stays disabled until Home can encrypt it safely.
-              </div>
-            ) : selectedGroup?.isOpen == null ? (
-              <div className="qubino-speech-bubble">
-                Home cannot verify this group's privacy yet, so ChibiHub will not send to it.
-              </div>
-            ) : sendStatus ? (
-              <div className="qubino-speech-bubble" role="status">{sendStatus}</div>
-            ) : (
-              <div className="qubino-speech-bubble">Qubino can send a Qortal group message for you.</div>
-            )}
+            <QubinoMascot action={sendMascotAction} className="chat-qubino-tiny" mood={isSending ? 'curious' : 'normal'} />
+            <div className="chat-composer-note" role={composerNote.isStatus ? 'status' : undefined}>
+              {composerNote.text}
+            </div>
           </div>
 
           {replyTarget ? (
@@ -753,7 +801,7 @@ export function ChatPage({
               disabled={!selectedGroup || !sendAvailable || isSending}
               onChange={(event) => setDraftMessage(event.target.value)}
               placeholder={selectedGroup ? `Message ${selectedGroup.groupName}` : 'Select a group'}
-              rows={3}
+              rows={2}
               value={draftMessage}
             />
             <button disabled={!selectedGroup || !sendAvailable || isSending || !draftMessage.trim()} type="submit">

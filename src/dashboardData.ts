@@ -7,7 +7,6 @@ export type QortalDashboardSnapshot = {
   errors: string[];
   heightLabel: string;
   loadedAt: number;
-  nodeModeLabel: string;
   nodeStatusLabel: string;
   peersLabel: string;
   qdnPeersLabel: string;
@@ -134,6 +133,5 @@ export async function loadQortalDashboardSnapshot(
     balanceLabel: balanceResult.status === 'fulfilled' ? formatQortBalance(balanceResult.value) : '—',
     errors,
     loadedAt: Date.now(),
-    nodeModeLabel: 'Qortal node',
   };
 }
