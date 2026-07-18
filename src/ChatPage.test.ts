@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getChatRoomStatus, getComposerNote } from './ChatPage';
+import { getChatRoomStatus, getComposerNote, getSendButtonLabel } from './ChatPage';
 import type { ChatGroupSummary } from './chatData';
 
 function makeGroup(overrides: Partial<ChatGroupSummary> = {}): ChatGroupSummary {
@@ -86,13 +86,13 @@ describe('getComposerNote', () => {
   it('explains why private group sending stays disabled', () => {
     const note = getComposerNote({ selectedGroupIsOpen: false, sendActionAvailable: true, sendStatus: '' });
 
-    expect(note.text).toContain('Private Qortal group sending stays disabled');
+    expect(note?.text).toContain('Private Qortal group sending stays disabled');
   });
 
   it('explains unverified privacy blocks sending', () => {
     const note = getComposerNote({ selectedGroupIsOpen: null, sendActionAvailable: true, sendStatus: '' });
 
-    expect(note.text).toContain("cannot verify this group's privacy");
+    expect(note?.text).toContain("cannot verify this group's privacy");
   });
 
   it('surfaces the live send status as an aria-status note', () => {
@@ -105,12 +105,16 @@ describe('getComposerNote', () => {
     expect(note).toEqual({ isStatus: true, text: 'Broadcast accepted: abc123' });
   });
 
-  it('falls back to the idle send prompt', () => {
+  it('does not add helper copy when the composer is ready to send', () => {
     const note = getComposerNote({ selectedGroupIsOpen: true, sendActionAvailable: true, sendStatus: '' });
 
-    expect(note).toEqual({
-      isStatus: false,
-      text: 'Qubino can send a Qortal group message for you.',
-    });
+    expect(note).toBeNull();
+  });
+});
+
+describe('getSendButtonLabel', () => {
+  it('tracks whether Qubino is currently processing the message', () => {
+    expect(getSendButtonLabel(false)).toBe('Send');
+    expect(getSendButtonLabel(true)).toBe('Sending…');
   });
 });

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { loadAccountBlockStatus } from './accountBlockStatus';
+import { getAccountBlockMascotMood, loadAccountBlockStatus } from './accountBlockStatus';
 import type { QdnSelectedAccount } from './types';
 import type { QortalNodeContext } from './nodeContext';
 
@@ -24,6 +24,15 @@ function response(value: unknown, status = 200) {
 
 describe('loadAccountBlockStatus', () => {
   afterEach(() => vi.unstubAllGlobals());
+
+  it('uses the dead Qubino face only when the selected account is blocked', () => {
+    expect(
+      getAccountBlockMascotMood({ addressBlocked: true, detail: 'blocked', nameBlocked: false, state: 'blocked' }),
+    ).toBe('dead');
+    expect(
+      getAccountBlockMascotMood({ addressBlocked: false, detail: 'clear', nameBlocked: false, state: 'clear' }),
+    ).toBe('normal');
+  });
 
   it('checks exact addresses and every owned name case-insensitively on the resolved origin', async () => {
     const fetchMock = vi
