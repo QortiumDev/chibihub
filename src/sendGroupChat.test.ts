@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { qdnRequest } from './qdnRequest';
 import {
   canSendQortalGroupChat,
+  canSendToQortalGroup,
   getSendQortalGroupChatRequest,
   isSendQortalGroupChatCancelled,
   sendQortalGroupChat,
@@ -29,6 +30,20 @@ describe('Qortal group chat send helpers', () => {
     expect(canSendQortalGroupChat(bridgeState)).toBe(true);
     expect(canSendQortalGroupChat({ ...bridgeState, actions: ['GET_QORTAL_CHAT_MESSAGES'] })).toBe(false);
     expect(canSendQortalGroupChat(null)).toBe(false);
+  });
+
+  it('only enables sending when Home supports it and the group is confirmed public', () => {
+    const bridgeState: BridgeState = {
+      actions: ['SEND_QORTAL_GROUP_CHAT'],
+      isHomeBridge: true,
+      ui: 'QORTIUM_HOME_ELECTRON',
+    };
+
+    expect(canSendToQortalGroup(bridgeState, { isOpen: true })).toBe(true);
+    expect(canSendToQortalGroup(bridgeState, { isOpen: false })).toBe(false);
+    expect(canSendToQortalGroup(bridgeState, { isOpen: null })).toBe(false);
+    expect(canSendToQortalGroup({ ...bridgeState, actions: [] }, { isOpen: true })).toBe(false);
+    expect(canSendToQortalGroup(bridgeState, null)).toBe(false);
   });
 
   it('builds the Home request with reply signature when present', () => {

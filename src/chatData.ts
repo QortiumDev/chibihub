@@ -4,6 +4,7 @@ import { qdnRequest } from './qdnRequest';
 import type {
   BridgeState,
   QdnSelectedAccount,
+  QortalAccountGroup,
   QortalActiveChats,
   QortalActiveGroupChat,
   QortalChatImageRef,
@@ -16,6 +17,7 @@ export const CHAT_MESSAGE_LIMIT = 50;
 export type ChatGroupSummary = {
   groupId: number;
   groupName: string;
+  isOpen: boolean | null;
   lastMessagePreview: string;
   senderLabel: string;
   timestamp: number;
@@ -37,6 +39,10 @@ export type ChatReactionSummary = {
   count: number;
   emoji: string;
   isOwn: boolean;
+};
+
+export type MapChatMessagesOptions = {
+  isPrivateGroup?: boolean;
 };
 
 export type ReplyPreview = {
@@ -70,16 +76,39 @@ export function canFetchQortalChatMessage(bridgeState: BridgeState | null) {
   return hasAction(bridgeState?.actions, 'GET_QORTAL_CHAT_MESSAGE');
 }
 
+export function canLoadQortalAccountGroups(bridgeState: BridgeState | null) {
+  return hasAction(bridgeState?.actions, 'GET_QORTAL_ACCOUNT_GROUPS');
+}
+
 function senderLabel(message: Pick<QortalChatMessage, 'sender' | 'senderName'>) {
   return message.senderName?.trim() || formatAddress(message.sender || '');
 }
 
-function toRawView(message: QortalChatMessage, account: QdnSelectedAccount): ChatMessageView & { chatReference: string } {
+function getEncryptedGroupMessage(): DecodedChatMessage {
+  return {
+    encrypted: true,
+    images: [],
+    isEdited: false,
+    kind: 'message',
+    qortalLinks: [],
+    reaction: null,
+    repliedTo: null,
+    specialId: null,
+    text: '[encrypted group message]',
+    unsupported: false,
+  };
+}
+
+function toRawView(
+  message: QortalChatMessage,
+  account: QdnSelectedAccount,
+  isPrivateGroup: boolean,
+): ChatMessageView & { chatReference: string } {
   const signature = typeof message.signature === 'string' ? message.signature : '';
 
   return {
     chatReference: typeof message.chatReference === 'string' ? message.chatReference : '',
-    decoded: decodeChatMessage(message),
+    decoded: isPrivateGroup ? getEncryptedGroupMessage() : decodeChatMessage(message),
     editTimestamp: null,
     isOwn: message.sender === account.address,
     reactions: [],
@@ -186,8 +215,22 @@ export function mergeOptimisticChatMessages(
   return [...loadedMessages, ...pendingOptimistic].sort((left, right) => left.timestamp - right.timestamp);
 }
 
-export function mapActiveGroupChats(payload: QortalActiveChats | unknown): ChatGroupSummary[] {
+export function mapActiveGroupChats(
+  payload: QortalActiveChats | unknown,
+  accountGroups: QortalAccountGroup[] | unknown = [],
+): ChatGroupSummary[] {
   const groups = payload && typeof payload === 'object' && 'groups' in payload ? (payload as QortalActiveChats).groups : [];
+  const groupPrivacyById = new Map<number, boolean>();
+
+  if (Array.isArray(accountGroups)) {
+    for (const group of accountGroups) {
+      const groupId = asNumber(group?.groupId);
+
+      if (groupId != null && typeof group?.isOpen === 'boolean') {
+        groupPrivacyById.set(groupId, group.isOpen);
+      }
+    }
+  }
 
   if (!Array.isArray(groups)) {
     return [];
@@ -201,11 +244,13 @@ export function mapActiveGroupChats(payload: QortalActiveChats | unknown): ChatG
         return null;
       }
 
-      const decoded = decodeChatMessage(group);
+      const isOpen = groupPrivacyById.get(groupId) ?? null;
+      const decoded = isOpen === false ? getEncryptedGroupMessage() : decodeChatMessage(group);
 
       return {
         groupId,
         groupName: group.groupName?.trim() || `Group ${groupId}`,
+        isOpen,
         lastMessagePreview: decoded.text || '[unsupported message]',
         senderLabel: senderLabel(group),
         timestamp: asNumber(group.timestamp) ?? 0,
@@ -215,7 +260,11 @@ export function mapActiveGroupChats(payload: QortalActiveChats | unknown): ChatG
     .sort((left, right) => right.timestamp - left.timestamp);
 }
 
-export function mapChatMessages(payload: unknown, account: QdnSelectedAccount): ChatMessageView[] {
+export function mapChatMessages(
+  payload: unknown,
+  account: QdnSelectedAccount,
+  options: MapChatMessagesOptions = {},
+): ChatMessageView[] {
   const rows = Array.isArray(payload) ? sortRowsAscending(payload) : [];
   const baseMessages: ChatMessageView[] = [];
   const baseBySignature = new Map<string, ChatMessageView>();
@@ -223,7 +272,7 @@ export function mapChatMessages(payload: unknown, account: QdnSelectedAccount): 
   const reactions = new Map<string, Map<string, Map<string, { sender: string; timestamp: number }>>>();
 
   for (const row of rows) {
-    const view = toRawView(row, account);
+    const view = toRawView(row, account, options.isPrivateGroup === true);
 
     if (!view.signature && !view.timestamp && !view.decoded.text) {
       continue;
@@ -293,17 +342,29 @@ export function mapChatMessages(payload: unknown, account: QdnSelectedAccount): 
   return baseMessages;
 }
 
-export async function loadActiveGroupChats(account: QdnSelectedAccount) {
-  const payload = await qdnRequest<QortalActiveChats>({
-    action: 'GET_QORTAL_ACTIVE_CHATS',
-    address: account.address,
-    encoding: 'BASE64',
-  });
+export async function loadActiveGroupChats(account: QdnSelectedAccount, bridgeState: BridgeState | null) {
+  const [payload, accountGroups] = await Promise.all([
+    qdnRequest<QortalActiveChats>({
+      action: 'GET_QORTAL_ACTIVE_CHATS',
+      address: account.address,
+      encoding: 'BASE64',
+    }),
+    canLoadQortalAccountGroups(bridgeState)
+      ? qdnRequest<QortalAccountGroup[]>({
+          action: 'GET_QORTAL_ACCOUNT_GROUPS',
+          address: account.address,
+        }).catch(() => [])
+      : Promise.resolve([]),
+  ]);
 
-  return mapActiveGroupChats(payload);
+  return mapActiveGroupChats(payload, accountGroups);
 }
 
-export async function loadGroupChatMessages(groupId: number, account: QdnSelectedAccount) {
+export async function loadGroupChatMessages(
+  groupId: number,
+  account: QdnSelectedAccount,
+  options: MapChatMessagesOptions = {},
+) {
   const payload = await qdnRequest<unknown>({
     action: 'GET_QORTAL_CHAT_MESSAGES',
     before: Date.now(),
@@ -313,7 +374,7 @@ export async function loadGroupChatMessages(groupId: number, account: QdnSelecte
     txGroupId: groupId,
   });
 
-  return mapChatMessages(payload, account);
+  return mapChatMessages(payload, account, options);
 }
 
 export async function loadChatMessageBySignature(signature: string, account: QdnSelectedAccount) {

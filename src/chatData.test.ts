@@ -29,6 +29,10 @@ function base64Json(value: unknown) {
   return bytesToBase64(new TextEncoder().encode(JSON.stringify(value)));
 }
 
+function base64Text(value: string) {
+  return bytesToBase64(new TextEncoder().encode(value));
+}
+
 function messageText(text: string, extra: Record<string, unknown> = {}) {
   return {
     ...extra,
@@ -83,7 +87,48 @@ describe('mapActiveGroupChats', () => {
     });
 
     expect(groups.map((group) => group.groupName)).toEqual(['Newer', 'Older']);
-    expect(groups[0]).toMatchObject({ lastMessagePreview: 'newer', senderLabel: 'Bob' });
+    expect(groups[0]).toMatchObject({ isOpen: null, lastMessagePreview: 'newer', senderLabel: 'Bob' });
+  });
+
+  it('adds public/private state from the selected account group list', () => {
+    const groups = mapActiveGroupChats(
+      {
+        groups: [
+          { groupId: 1091, groupName: 'Qortium', timestamp: 20 },
+          { groupId: 1033, groupName: 'Private group', timestamp: 10 },
+        ],
+      },
+      [
+        { groupId: 1091, groupName: 'Qortium', isOpen: true },
+        { groupId: 1033, groupName: 'Private group', isOpen: false },
+      ],
+    );
+
+    expect(groups.map((group) => [group.groupId, group.isOpen])).toEqual([
+      [1091, true],
+      [1033, false],
+    ]);
+    expect(groups[1].lastMessagePreview).toBe('[encrypted group message]');
+  });
+
+  it('does not trust privacy metadata from the active-chat payload', () => {
+    const groups = mapActiveGroupChats({
+      groups: [
+        {
+          data: base64Json(messageText('active payload says public')),
+          encoding: 'BASE64',
+          groupId: 1091,
+          groupName: 'Qortium',
+          isOpen: true,
+          timestamp: 20,
+        },
+      ],
+    });
+
+    expect(groups[0]).toMatchObject({
+      isOpen: null,
+      lastMessagePreview: 'active payload says public',
+    });
   });
 });
 
@@ -178,6 +223,37 @@ describe('mapChatMessages edits and reactions', () => {
 });
 
 describe('mapChatMessages', () => {
+  it('replaces private group ciphertext with an encrypted placeholder', () => {
+    const messages = mapChatMessages(
+      [
+        {
+          data: base64Text('MDAwMDAwMDAwMzEwMjMvaXQ0Q2lwaGVydGV4dA=='),
+          encoding: 'BASE64',
+          isEncrypted: false,
+          sender: 'QPrivateSender',
+          senderName: 'Private sender',
+          signature: 'private-signature',
+          timestamp: 1783403484577,
+        },
+      ],
+      account,
+      { isPrivateGroup: true },
+    );
+
+    expect(messages).toHaveLength(1);
+    expect(messages[0]).toMatchObject({
+      sender: 'QPrivateSender',
+      senderLabel: 'Private sender',
+      signature: 'private-signature',
+      timestamp: 1783403484577,
+    });
+    expect(messages[0].decoded).toMatchObject({
+      encrypted: true,
+      text: '[encrypted group message]',
+      unsupported: false,
+    });
+  });
+
   it('reverses reverse=true API rows into oldest-to-newest display order', () => {
     const messages = mapChatMessages(
       [

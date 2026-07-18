@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { loadChatAvatar } from './chatAvatars';
+import { formatAddress } from './account';
+import { expireFailedChatAvatarCache, loadChatAvatar } from './chatAvatars';
 import {
   canFetchQortalChatMessage,
   canReadQortalGroupChat,
@@ -19,7 +20,12 @@ import { loadChatImage } from './chatImages';
 import { canOpenQdnLinks, openQdnLink, splitTextByQdnLinks } from './qdnLinks';
 import { QubinoMascot, type QubinoAction } from './QubinoMascot';
 import { getQortalIdentityDisplayName, type QortalIdentity } from './qortalIdentity';
-import { canSendQortalGroupChat, isSendQortalGroupChatCancelled, sendQortalGroupChat } from './sendGroupChat';
+import {
+  canSendQortalGroupChat,
+  canSendToQortalGroup,
+  isSendQortalGroupChatCancelled,
+  sendQortalGroupChat,
+} from './sendGroupChat';
 import type { BridgeState, QdnSelectedAccount, QortalChatImageRef } from './types';
 
 function getInitials(label: string) {
@@ -61,10 +67,12 @@ function getRelativeTime(timestamp: number) {
 }
 
 function ChatAvatar({
+  avatarRefreshKey,
   avatarUrlOverride = null,
   label,
   name,
 }: {
+  avatarRefreshKey: number;
   avatarUrlOverride?: string | null;
   label: string;
   name: string | null;
@@ -99,7 +107,7 @@ function ChatAvatar({
     return () => {
       isActive = false;
     };
-  }, [avatarUrlOverride, name]);
+  }, [avatarRefreshKey, avatarUrlOverride, name]);
 
   if (avatarUrl && !failed) {
     return <img className="chat-avatar" src={avatarUrl} alt="" onError={() => setFailed(true)} />;
@@ -183,6 +191,7 @@ function ChatMessageText({
 }
 
 function ChatMessageBubble({
+  avatarRefreshKey,
   canOpenLinks,
   qortalIdentity,
   message,
@@ -190,6 +199,7 @@ function ChatMessageBubble({
   onReply,
   replies,
 }: {
+  avatarRefreshKey: number;
   canOpenLinks: boolean;
   qortalIdentity: QortalIdentity | null;
   message: ChatMessageView;
@@ -207,7 +217,12 @@ function ChatMessageBubble({
 
   return (
     <article className={`chat-message ${message.isOwn ? 'chat-message-own' : 'chat-message-other'}`}>
-      <ChatAvatar avatarUrlOverride={avatarUrl} label={senderLabel} name={senderName} />
+      <ChatAvatar
+        avatarRefreshKey={avatarRefreshKey}
+        avatarUrlOverride={avatarUrl}
+        label={senderLabel}
+        name={senderName}
+      />
       <div className="chat-message-stack">
         <div className="chat-sender">{senderLabel}</div>
         <div className="chat-bubble">
@@ -232,7 +247,7 @@ function ChatMessageBubble({
             </div>
           ) : null}
           <footer>
-            {message.signature ? (
+            {message.signature && !message.decoded.encrypted ? (
               <button className="chat-reply-button" type="button" onClick={() => onReply(message)}>
                 Reply
               </button>
@@ -260,11 +275,13 @@ export function ChatPage({
   account,
   bridgeState,
   onBackToDashboard,
+  onRefreshIdentity,
   qortalIdentity,
 }: {
   account: QdnSelectedAccount;
   bridgeState: BridgeState | null;
   onBackToDashboard: () => void;
+  onRefreshIdentity: () => void;
   qortalIdentity: QortalIdentity | null;
 }) {
   const [groups, setGroups] = useState<ChatGroupSummary[]>([]);
@@ -279,17 +296,23 @@ export function ChatPage({
   const [isSending, setIsSending] = useState(false);
   const [sendStatus, setSendStatus] = useState('');
   const [sendMascotAction, setSendMascotAction] = useState<QubinoAction>('idle');
+  const [avatarRefreshKey, setAvatarRefreshKey] = useState(0);
+  const [groupRefreshKey, setGroupRefreshKey] = useState(0);
   const [messageRefreshKey, setMessageRefreshKey] = useState(0);
   const feedRef = useRef<HTMLDivElement | null>(null);
   const optimisticMessagesRef = useRef<ChatMessageView[]>([]);
   const shouldScrollToBottomRef = useRef(true);
   const chatAvailable = canReadQortalGroupChat(bridgeState);
   const replyFetchAvailable = canFetchQortalChatMessage(bridgeState);
-  const sendAvailable = canSendQortalGroupChat(bridgeState);
+  const sendActionAvailable = canSendQortalGroupChat(bridgeState);
   const qdnLinksOpenable = canOpenQdnLinks(bridgeState);
 
   const selectedGroup = groups.find((group) => group.groupId === selectedGroupId) ?? null;
+  const selectedGroupIsPrivate = selectedGroup?.isOpen === false;
+  const sendAvailable = canSendToQortalGroup(bridgeState, selectedGroup);
   const ownSenderLabel = getQortalIdentityDisplayName(qortalIdentity);
+  const boundAccountName = qortalIdentity?.name?.trim() || 'Selected Qortal account';
+  const boundAccountAddress = formatAddress(account.address);
 
   function isFeedNearBottom() {
     const feed = feedRef.current;
@@ -304,6 +327,14 @@ export function ChatPage({
   function requestMessageRefresh({ forceBottom = false }: { forceBottom?: boolean } = {}) {
     shouldScrollToBottomRef.current = forceBottom || isFeedNearBottom();
     setMessageRefreshKey((current) => current + 1);
+  }
+
+  function requestFullRefresh() {
+    expireFailedChatAvatarCache();
+    onRefreshIdentity();
+    setAvatarRefreshKey((current) => current + 1);
+    setGroupRefreshKey((current) => current + 1);
+    requestMessageRefresh();
   }
 
   function scrollFeedToBottom(behavior: ScrollBehavior = 'smooth') {
@@ -424,7 +455,7 @@ export function ChatPage({
     setIsLoadingGroups(true);
     setError('');
 
-    void loadActiveGroupChats(account)
+    void loadActiveGroupChats(account, bridgeState)
       .then((nextGroups) => {
         if (!isActive) {
           return;
@@ -451,7 +482,7 @@ export function ChatPage({
     return () => {
       isActive = false;
     };
-  }, [account, chatAvailable]);
+  }, [account, bridgeState, chatAvailable, groupRefreshKey]);
 
   useEffect(() => {
     if (!chatAvailable || selectedGroupId == null) {
@@ -472,7 +503,9 @@ export function ChatPage({
       }
 
       try {
-        const nextMessages = await loadGroupChatMessages(selectedGroupId as number, account);
+        const nextMessages = await loadGroupChatMessages(selectedGroupId as number, account, {
+          isPrivateGroup: selectedGroupIsPrivate,
+        });
 
         if (isActive) {
           const pendingOptimistic = filterPendingOptimisticMessages(nextMessages, optimisticMessagesRef.current);
@@ -499,7 +532,7 @@ export function ChatPage({
       isActive = false;
       window.clearInterval(intervalId);
     };
-  }, [account, chatAvailable, messageRefreshKey, selectedGroupId]);
+  }, [account, chatAvailable, messageRefreshKey, selectedGroupId, selectedGroupIsPrivate]);
 
   useEffect(() => {
     setReplyTarget(null);
@@ -581,13 +614,26 @@ export function ChatPage({
       <aside className="chat-sidebar">
         <div className="chat-sidebar-heading">
           <h2>Group Chat</h2>
-          <p>Read-only Qortal groups</p>
+          <p>Qortal groups</p>
           <button className="chat-back-button" type="button" onClick={onBackToDashboard}>
             Dashboard
           </button>
         </div>
+        <div className="chat-account-context">
+          <span>This tab uses</span>
+          <strong>{boundAccountName}</strong>
+          <small title={account.address}>{boundAccountAddress}</small>
+        </div>
         {isLoadingGroups ? <p className="chat-loading">Loading groups...</p> : null}
-        {!isLoadingGroups && groups.length === 0 ? <p className="chat-loading">No active group chats found.</p> : null}
+        {!isLoadingGroups && groups.length === 0 ? (
+          <div className="chat-group-empty" role="status">
+            <strong>No active group chats found for this account.</strong>
+            <span>
+              ChibiHub keeps the account selected when this app tab opened. To use another Qortal account,
+              select it in Home and reopen ChibiHub.
+            </span>
+          </div>
+        ) : null}
         <div className="chat-group-list">
           {groups.map((group) => (
             <button
@@ -598,7 +644,7 @@ export function ChatPage({
             >
               <strong>{group.groupName}</strong>
               <span>{group.senderLabel}: {group.lastMessagePreview}</span>
-              <small>{getRelativeTime(group.timestamp)}</small>
+              <small>{group.isOpen === false ? 'Private · ' : ''}{getRelativeTime(group.timestamp)}</small>
             </button>
           ))}
         </div>
@@ -608,18 +654,36 @@ export function ChatPage({
         <div className="chat-room-heading">
           <div>
             <h2>{selectedGroup?.groupName ?? 'Select a group'}</h2>
-            <p>{selectedGroup ? 'Qortal public group messages' : 'Pick a group to read messages.'}</p>
+            <p>
+              {selectedGroup?.isOpen === true
+                ? 'Qortal public group messages'
+                : selectedGroup?.isOpen === false
+                  ? 'Qortal private group messages (encrypted)'
+                  : selectedGroup
+                    ? 'Qortal group messages'
+                    : 'Pick a group to read messages.'}
+            </p>
           </div>
           {isLoadingMessages ? (
             <span className="chat-pill">Loading</span>
           ) : (
             <div className="chat-room-actions">
-              <span className="chat-pill">{sendAvailable ? 'Send-ready' : 'Read-only'}</span>
+              <span className="chat-pill">
+                {!selectedGroup
+                  ? 'Select a group'
+                  : selectedGroup.isOpen === false
+                    ? 'Private · Read-only'
+                    : selectedGroup.isOpen == null
+                      ? 'Privacy unknown · Read-only'
+                      : sendActionAvailable
+                        ? 'Send-ready'
+                        : 'Read-only'}
+              </span>
               <button
                 className="chat-refresh-button"
-                disabled={!selectedGroup}
+                disabled={isLoadingGroups || isLoadingMessages}
                 type="button"
-                onClick={() => requestMessageRefresh()}
+                onClick={requestFullRefresh}
               >
                 Refresh
               </button>
@@ -636,6 +700,7 @@ export function ChatPage({
         <div className="chat-message-list" ref={feedRef}>
           {messages.map((message, index) => (
             <ChatMessageBubble
+              avatarRefreshKey={avatarRefreshKey}
               canOpenLinks={qdnLinksOpenable}
               key={message.signature || `${message.timestamp}-${index}`}
               message={message}
@@ -659,8 +724,16 @@ export function ChatPage({
         <form className="chat-composer" onSubmit={handleSendMessage}>
           <div className="chat-composer-qubino">
             <QubinoMascot action={sendMascotAction} className="chat-qubino-mini" mood={isSending ? 'curious' : 'normal'} />
-            {!sendAvailable ? (
+            {!sendActionAvailable ? (
               <div className="qubino-speech-bubble">Home build too old: missing SEND_QORTAL_GROUP_CHAT.</div>
+            ) : selectedGroup?.isOpen === false ? (
+              <div className="qubino-speech-bubble">
+                Private Qortal group sending stays disabled until Home can encrypt it safely.
+              </div>
+            ) : selectedGroup?.isOpen == null ? (
+              <div className="qubino-speech-bubble">
+                Home cannot verify this group's privacy yet, so ChibiHub will not send to it.
+              </div>
             ) : sendStatus ? (
               <div className="qubino-speech-bubble" role="status">{sendStatus}</div>
             ) : (

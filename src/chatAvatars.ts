@@ -2,8 +2,15 @@ import { qdnRequest } from './qdnRequest';
 
 const QORTAL_AVATAR_MAX_BYTES = 2 * 1024 * 1024;
 const MAX_CONCURRENT_AVATAR_FETCHES = 3;
+export const FAILED_CHAT_AVATAR_CACHE_TTL_MS = 30_000;
 
-const cache = new Map<string, Promise<string | null>>();
+type AvatarCacheEntry = {
+  expiresAt: number;
+  promise: Promise<string | null>;
+  status: 'failure' | 'pending' | 'success';
+};
+
+const cache = new Map<string, AvatarCacheEntry>();
 let activeFetches = 0;
 const queue: Array<() => void> = [];
 
@@ -49,9 +56,11 @@ export function loadChatAvatar(name: string) {
 
   const cached = cache.get(normalizedName);
 
-  if (cached) {
-    return cached;
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.promise;
   }
+
+  cache.delete(normalizedName);
 
   const promise = schedule(async () => {
     try {
@@ -68,10 +77,36 @@ export function loadChatAvatar(name: string) {
       return null;
     }
   });
+  const entry: AvatarCacheEntry = {
+    expiresAt: Number.POSITIVE_INFINITY,
+    promise,
+    status: 'pending',
+  };
 
-  cache.set(normalizedName, promise);
+  cache.set(normalizedName, entry);
+  void promise.then((url) => {
+    if (cache.get(normalizedName) !== entry) {
+      return;
+    }
+
+    if (url) {
+      entry.status = 'success';
+      return;
+    }
+
+    entry.status = 'failure';
+    entry.expiresAt = Date.now() + FAILED_CHAT_AVATAR_CACHE_TTL_MS;
+  });
 
   return promise;
+}
+
+export function expireFailedChatAvatarCache() {
+  for (const [name, entry] of cache) {
+    if (entry.status === 'failure') {
+      cache.delete(name);
+    }
+  }
 }
 
 export function resetChatAvatarCacheForTest() {

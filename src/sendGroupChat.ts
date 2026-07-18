@@ -12,6 +12,13 @@ export function canSendQortalGroupChat(bridgeState: BridgeState | null) {
   return hasAction(bridgeState?.actions, 'SEND_QORTAL_GROUP_CHAT');
 }
 
+export function canSendToQortalGroup(
+  bridgeState: BridgeState | null,
+  group: { isOpen: boolean | null } | null,
+) {
+  return group?.isOpen === true && canSendQortalGroupChat(bridgeState);
+}
+
 export function isSendQortalGroupChatCancelled(
   result: SendQortalGroupChatResult,
 ): result is Extract<SendQortalGroupChatResult, { canceled: true }> {

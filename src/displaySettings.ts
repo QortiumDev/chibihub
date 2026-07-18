@@ -1,6 +1,6 @@
 export const ACCENT_VALUES = ['green', 'blue', 'orange', 'purple', 'red', 'teal', 'cyan', 'pink', 'yellow'] as const;
 export const TEXT_SIZE_VALUES = ['extra-small', 'small', 'medium', 'large', 'extra-large', 'huge'] as const;
-export const UI_STYLE_VALUES = ['classic', 'modern', 'chibi'] as const;
+export const UI_STYLE_VALUES = ['classic', 'modern', 'fun'] as const;
 
 export type QdnAccent = (typeof ACCENT_VALUES)[number];
 export type QdnTheme = 'dark' | 'light';
