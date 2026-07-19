@@ -19,6 +19,7 @@ import {
 import { loadChatImage } from './chatImages';
 import { canOpenQdnLinks, openQdnLink, splitTextByQdnLinks } from './qdnLinks';
 import { QubinoMascot, type QubinoAction } from './QubinoMascot';
+import { resolveChatGroupId } from './appRoute';
 import { getQortalIdentityDisplayName, type QortalIdentity } from './qortalIdentity';
 import {
   canSendQortalGroupChat,
@@ -350,16 +351,21 @@ export function ChatPage({
   bridgeState,
   onBackToDashboard,
   onRefreshIdentity,
+  onSelectedGroupChange,
   qortalIdentity,
+  requestedGroupId,
 }: {
   account: QdnSelectedAccount;
   bridgeState: BridgeState | null;
   onBackToDashboard: () => void;
   onRefreshIdentity: () => void;
+  onSelectedGroupChange: (groupId: number | null, intent: 'push' | 'replace') => void;
   qortalIdentity: QortalIdentity | null;
+  requestedGroupId: number | null;
 }) {
   const [groups, setGroups] = useState<ChatGroupSummary[]>([]);
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
+  const [hasLoadedGroups, setHasLoadedGroups] = useState(false);
   const [messages, setMessages] = useState<ChatMessageView[]>([]);
   const [isLoadingGroups, setIsLoadingGroups] = useState(true);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
@@ -523,6 +529,7 @@ export function ChatPage({
 
     if (!chatAvailable) {
       setIsLoadingGroups(false);
+      setHasLoadedGroups(false);
       setGroups([]);
       setSelectedGroupId(null);
       setMessages([]);
@@ -533,6 +540,7 @@ export function ChatPage({
     }
 
     setIsLoadingGroups(true);
+    setHasLoadedGroups(false);
     setError('');
 
     void loadActiveGroupChats(account, bridgeState)
@@ -542,11 +550,7 @@ export function ChatPage({
         }
 
         setGroups(nextGroups);
-        setSelectedGroupId((current) =>
-          current != null && nextGroups.some((group) => group.groupId === current)
-            ? current
-            : (nextGroups[0]?.groupId ?? null),
-        );
+        setHasLoadedGroups(true);
       })
       .catch((loadError) => {
         if (isActive) {
@@ -563,6 +567,23 @@ export function ChatPage({
       isActive = false;
     };
   }, [account, bridgeState, chatAvailable, groupRefreshKey]);
+
+  useEffect(() => {
+    if (isLoadingGroups || !hasLoadedGroups) {
+      return;
+    }
+
+    const resolvedGroupId = resolveChatGroupId(
+      requestedGroupId,
+      groups.map((group) => group.groupId),
+    );
+
+    setSelectedGroupId((current) => (current === resolvedGroupId ? current : resolvedGroupId));
+
+    if (resolvedGroupId !== requestedGroupId) {
+      onSelectedGroupChange(resolvedGroupId, 'replace');
+    }
+  }, [groups, hasLoadedGroups, isLoadingGroups, onSelectedGroupChange, requestedGroupId]);
 
   useEffect(() => {
     if (!chatAvailable || selectedGroupId == null) {
@@ -720,7 +741,10 @@ export function ChatPage({
               className={group.groupId === selectedGroupId ? 'chat-group-item active' : 'chat-group-item'}
               key={group.groupId}
               type="button"
-              onClick={() => setSelectedGroupId(group.groupId)}
+              onClick={() => {
+                setSelectedGroupId(group.groupId);
+                onSelectedGroupChange(group.groupId, 'push');
+              }}
             >
               <strong>{group.groupName}</strong>
               <span>{group.senderLabel}: {group.lastMessagePreview}</span>

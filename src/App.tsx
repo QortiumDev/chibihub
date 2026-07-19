@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   hasAction,
   isSelectedAccountChangedMessage,
@@ -20,6 +20,11 @@ import {
 } from './accountBlockStatus';
 import { ChatPage } from './ChatPage';
 import { Dashboard } from './Dashboard';
+import {
+  getChibiHubRouteUrl,
+  readChibiHubRoute,
+  type ChibiHubRoute,
+} from './appRoute';
 import { QubinoMascot } from './QubinoMascot';
 import { getEnterIntent, shouldEnterDashboardAfterUnlock } from './entryFlow';
 import qubinoTintLogo from './assets/qubino-bw.png';
@@ -38,8 +43,6 @@ const APP_TITLE = 'ChibiHub';
 const INTRO_DURATION_MS = 3400;
 
 let hasPlayedIntroThisSession = false;
-
-type AppView = 'chat' | 'dashboard';
 
 function prefersReducedMotion() {
   return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -88,7 +91,8 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
     () => initialDisplaySettings ?? getInitialDisplaySettings(),
   );
   const [hasEnteredDashboard, setHasEnteredDashboard] = useState(false);
-  const [activeView, setActiveView] = useState<AppView>('dashboard');
+  const [route, setRoute] = useState<ChibiHubRoute>(() => readChibiHubRoute(window.location.href));
+  const routeOriginRef = useRef<'navigation' | 'popstate' | 'startup'>('startup');
   const [qortalIdentity, setQortalIdentity] = useState<QortalIdentity | null>(null);
   const [isIdentityLoading, setIsIdentityLoading] = useState(false);
   const [identityRefreshKey, setIdentityRefreshKey] = useState(0);
@@ -122,12 +126,10 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
 
       if (!selectedAccount?.isUnlocked) {
         setHasEnteredDashboard(false);
-        setActiveView('dashboard');
       }
     } catch (refreshError) {
       setAccount(null);
       setHasEnteredDashboard(false);
-      setActiveView('dashboard');
       setError(refreshError instanceof Error ? refreshError.message : String(refreshError));
     } finally {
       setIsAccountLoading(false);
@@ -221,6 +223,22 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
   useEffect(() => {
     void refreshAccount();
   }, [refreshAccount]);
+
+  useEffect(() => {
+    const canonicalUrl = getChibiHubRouteUrl(
+      window.location.href,
+      readChibiHubRoute(window.location.href),
+    );
+    window.history.replaceState({}, '', canonicalUrl);
+
+    const handlePopState = () => {
+      routeOriginRef.current = 'popstate';
+      setRoute(readChibiHubRoute(window.location.href));
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   useEffect(() => {
     applyDisplaySettings(displaySettings);
@@ -329,10 +347,42 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
     }
   }
 
+  const navigate = useCallback(
+    (nextRoute: ChibiHubRoute, intent: 'push' | 'replace' = 'push') => {
+      const nextUrl = getChibiHubRouteUrl(window.location.href, nextRoute);
+      const currentUrl = new URL(window.location.href);
+
+      if (
+        `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}` !==
+        `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`
+      ) {
+        window.history[intent === 'replace' ? 'replaceState' : 'pushState']({}, '', nextUrl);
+      }
+
+      routeOriginRef.current = 'navigation';
+      setRoute(nextRoute);
+    },
+    [],
+  );
+
+  const handleSelectedGroupChange = useCallback(
+    (groupId: number | null, intent: 'push' | 'replace') => {
+      // A popstate must only rehydrate React state. App-created entries already
+      // contain valid group IDs, so a fallback after an external/stale entry must
+      // not mutate the entry the user just returned to.
+      if (intent === 'replace' && routeOriginRef.current === 'popstate') {
+        return;
+      }
+
+      navigate({ groupId, view: 'chat' }, intent);
+    },
+    [navigate],
+  );
+
   return (
     <main
       className={`chibi-app ${introComplete ? 'intro-complete' : 'intro-running'} ${
-        hasEnteredDashboard && account?.isUnlocked && activeView === 'chat' ? 'chat-active' : ''
+        hasEnteredDashboard && account?.isUnlocked && route.view === 'chat' ? 'chat-active' : ''
       }`}
       data-accent={displaySettings.accent}
       data-text-size={displaySettings.textSize}
@@ -360,20 +410,22 @@ export function App({ initialDisplaySettings }: AppProps = {}) {
       </header>
 
       {hasEnteredDashboard && account?.isUnlocked ? (
-        activeView === 'chat' ? (
+        route.view === 'chat' ? (
           <ChatPage
             account={account}
             bridgeState={bridgeState}
-            onBackToDashboard={() => setActiveView('dashboard')}
+            onBackToDashboard={() => navigate({ view: 'dashboard' })}
             onRefreshIdentity={() => setIdentityRefreshKey((current) => current + 1)}
+            onSelectedGroupChange={handleSelectedGroupChange}
             qortalIdentity={qortalIdentity}
+            requestedGroupId={route.groupId}
           />
         ) : (
           <Dashboard
             account={account}
             accountBlockStatus={accountBlockStatus}
             bridgeState={bridgeState}
-            onOpenChat={() => setActiveView('chat')}
+            onOpenChat={() => navigate({ groupId: null, view: 'chat' })}
             qortalIdentity={qortalIdentity}
             qortalNodeContext={qortalNodeContext}
             qortalNodeError={qortalNodeError}
