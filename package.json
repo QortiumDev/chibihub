@@ -1,6 +1,6 @@
 {
   "name": "chibihub",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "private": true,
   "license": "0BSD",
   "description": "A QDN app for Qortium: ChibiHub.",
@@ -19,7 +19,7 @@
     "@fontsource/lexend": "^5.2.11",
     "@vitejs/plugin-react": "^6.0.4",
     "react": "^19.2.8",
-    "react-dom": "^19.2.7",
+    "react-dom": "^19.2.8",
     "typescript": "^6.0.3",
     "vite": "^8.1.5"
   },
